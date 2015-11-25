@@ -41,7 +41,7 @@ core.Monitor.set_cid(CONFIGURATIONID);
 network = Network();
 import util.NetworkAnalysis
 dbr = DatabaseReader();
-analyst = NetworkAnalysis(network);
+
 
 query = ['SELECT * FROM info24_feed.taxi_tt '...
     'WHERE(startlid = 11269 OR startlid = 14136 '...
@@ -51,8 +51,8 @@ query = ['SELECT * FROM info24_feed.taxi_tt '...
     'AND(endlid = 11269 OR endlid = 14136 OR endlid = 6189 OR endlid = 8568 '...
     'OR endlid = 15256 OR endlid = 9150 OR endlid = 38698 '...
     'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) '...
-    'AND DATE(start_time) = ''2013-03-21'' AND isvalid '...
-    'ORDER BY start_time LIMIT 100'];
+    'AND (start_time BETWEEN ''2013-03-21 08:00:00'' AND ''2013-03-21 10:00:00'') AND isvalid '...
+    'ORDER BY start_time'];
 
 %   query = 'SELECT * FROM info24_feed.taxi_tt WHERE(startlid = 11269 OR startlid = 14136 OR startlid = 6189 OR startlid = 8568 OR startlid = 15256 OR startlid = 9150 OR startlid = 38698 OR startlid = 9160 OR startlid = 71687 OR startlid = 9198) AND(endlid = 11269 OR endlid = 14136 OR endlid = 6189 OR endlid = 8568 OR endlid = 15256 OR endlid = 9150 OR endlid = 38698 OR endlid = 9160 OR endlid = 71687 OR endlid = 9198)AND DATE(start_time) = "2013-03-21" AND isvalid ORDER BY start_time';
 query = String(query);
@@ -64,58 +64,60 @@ catch
     'NOOOOOOOO!!!!!'
 end
 
-%dbr.psRSNext('test')
-start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,0,0,0,0);
+start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,8,0,0,0);
+end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,10,0,0,0);
+numberOfTimeStepsTemp = TimeInterval(start_TimeStamp, end_TimeStamp);
+numberOfTimeSteps = numberOfTimeStepsTemp.get_time_interval_duration;
 
 wantedDataInt = [String('startlid'), String('endlid'), String('traveltime')];
 wantedDataDouble = [String('start_offset'), String('end_offset')];
 wantedDataTimeStamp = [String('start_time'), String('end_time')];
 
 row = 1;
-intData = zeros(110,10);
-doubleData = zeros(110,10);
-timeStampData = zeros(110,10);
-bajskorv = 0; 
-while bajskorv < 10
-    dbr.psRSNext('test');
+
+%To make generall, sql query: SELECT COUNT(*) WHERE (Same as before)
+intData = zeros(121,3);
+doubleData = zeros(121,2);
+timeStampData = zeros(121,2);
+h = 1;
+while dbr.psRSNext('test');
+    
     for i = 1:size(wantedDataInt)
         intData(row,i) = dbr.psRSGetInteger('test',wantedDataInt(i));
     end
     
     for i = 1:size(wantedDataDouble)
-        doubleData(row,i) = dbr.psRSGetDouble('test',wantedDataDouble(i));
+        k = dbr.psRSGetDouble('test',wantedDataDouble(i));
+        if (k.doubleValue < 0)
+            doubleData(row,i) = 0;
+        else
+            doubleData(row,i) = k;
+        end
     end
     
     for i = 1:size(wantedDataTimeStamp)
         time_stamp_temp = TimeInterval(start_TimeStamp, dbr.psRSGetTimestamp('test', wantedDataTimeStamp(i)));
         timeStampData(row,i) = time_stamp_temp.get_time_interval_duration;
-
     end
-%         test_start = dbr.psRSGetTimestamp('test', wantedDataTimeStamp(1));   
-%         test_end = dbr.psRSGetTimestamp('test', wantedDataTimeStamp(2));
-%         timeStampData(row,i) = TimeInterval(start_TimeStamp, test_start) 
-        %timeStampData(row,i) = dbr.psRSGetTimestamp('test',wantedDataTimeStamp(i));
-     
     row = row + 1;
-    bajskorv = bajskorv + 1;
+    h = h + 1;
+    
 end
 
-
-a = Spot(network.getLinkWithID(intData(1,1)), doubleData(1,1), -1);
-b = Spot(network.getLinkWithID(intData(1,2)), doubleData(1,2), -1);
-travelTime = intData(1,3);
-% 
-route = analyst.extractRoute(a,b);
-route.getRouteLength;
-% 
-v = (route.getRouteLength/travelTime)*3.6;
+row = row - 1;
+analyst = NetworkAnalysis(network);
 
 
-[numberOfCells, cellSize, lengthStretch, totalNumberOfCells] = getCellMap(network, linkIdArray);
-
-startCell = getCellId(a, linkIdArray, numberOfCells, cellSize);
-endCell = getCellId(b, linkIdArray, numberOfCells, cellSize);
-k = setCellSpeedTaxi(startCell, endCell, v, totalNumberOfCells);
+[k, endSec] = setCellSpeed(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
 
 
+for i= 1:endSec
+    for j = 1:50
+    	hoppas(i,j) = nanmean(k(:,j,i));
+    end
+end
 
+load('mycmap','cm')
+imagesc(hoppas);
+colormap(cm)
+colorbar
