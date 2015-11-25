@@ -108,7 +108,7 @@ row = row - 1;
 analyst = NetworkAnalysis(network);
 
 
-[k, endSec] = setCellSpeed(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
+[k, endSec, teori] = setCellSpeed(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
 
 
 for i= 1:endSec
@@ -117,7 +117,28 @@ for i= 1:endSec
     end
 end
 
+for j = 1:endSec
+    hoppas2(j,1:50) = max(hoppas(j,:));
+end
+hoppas = hoppas';
+hoppas2 = hoppas2';
+% figure(1)
+
+% load('mycmap','cm')
+% imagesc(hoppas);
+% colormap(cm)
+% colorbar
+
+figure(1)
 load('mycmap','cm')
-imagesc(hoppas);
+imagesc(hoppas(21:50,:));
 colormap(cm)
 colorbar
+
+figure(2)
+load('mycmap','cm')
+imagesc(hoppas2(21:50,:));
+colormap(cm)
+colorbar
+
+
