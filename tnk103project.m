@@ -146,40 +146,34 @@ end
 
 end
 
-
-Hej = 2 * 15;
-
-% <<<<<<< HEAD
-% sensorDataArray
-
-%  temp=sensorDataArray';
-
 % figure(1)
-% mycmap = colormap(ax); 
 
-% colormap(ax_new,mycmap)
+% temp=[rows=cells, columns=timesteps]
+plotHeatMap(temp);
 
-% save('MyColormaps','mycmap')
-
+function = plotHeatMap(temp)
 load('mycmap','cm')
 imagesc(temp);
 colormap(cm)
 colorbar
-
-
-%% spara ny colomap: 1. Gör i colormapeditor, apply 2.kommandofönstretcm=colormap 3. kommandofönstretcm=save mycmap cm; %%
-
-% spara ny colomap: 1. Gör i colormapeditor, apply 2.kommandofönstretcm=colormap 3. kommandofönstretcm=save mycmap cm;
-
-
+end
+ 
+%% Spara ny colomap: %%
+% 1. Kör följande i m-fil.
 %   colormap ('jet')
-%  title('speed contour plot')
+%   title('speed contour plot')
 %   imagesc(temp);
-%  colorbar;
-
+%   colorbar;
+% 2. Öppna colormapeditor från kommandofönstret och ändra till önskad
+% layout
+% 3. Spara layoten i egen variabel från kommandofönstret: 
+% cm=colormap
+% 4. Spara ner cm i en mat-fil
+% save mycmap cm
+% 
 %%
-
-
+ 
+%% Sparas endast för om vi vill använda cell arrays
 % % cellSpeed includes index number of arrays. Each array is
 % % cellWithSensor for each index (cell)
 %      c=cellSpeed{index};
@@ -187,17 +181,9 @@ colorbar
 % % array c in cellSpeed
 %      c(cellWithSensor,1)=sensorDataArray(1,1);
 %      cellSpeed{index}=c;
-% =======
-% 'Micke är bäst'
-% figure
-% [C, h] = contourf(3600*sensorDataArray);
-% colormap hot
-% title('speed contour plot')
-% xlabel('time');
-% ylabel('segment');
-% clabel(C,h);
-% set(gca,'YTick',([1:1:length(q(1,:))]))
-% >>>>>>> origin/master
+%%
+
+%tagit bort saker…
 
 
 
