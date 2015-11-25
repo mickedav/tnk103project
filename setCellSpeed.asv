@@ -1,0 +1,33 @@
+function [k, kaka, A] = setCellSpeed(intData, doubleData, timeStampData, linkIdArray, network, analyst)
+import netconfig.*
+
+[numberOfCells, cellSize, lengthStretch, totalNumberOfCells] = getCellMap(network, linkIdArray);
+
+startSec = min(timeStampData(:,1));
+endSec = max(timeStampData(:,2));
+
+K = zeros(100,50,max(timeStampData(:,2)));
+for i = 1:10
+    A = zeros(1,max(timeStampData(:,2)));
+    a = Spot(network.getLinkWithID(intData(i,1)), doubleData(i,1), -1);
+    b = Spot(network.getLinkWithID(intData(i,2)), doubleData(i,2), -1);
+    travelTime = intData(1,3);
+    route = analyst.extractRoute(a,b);
+    route.getRouteLength;
+    
+    v = (route.getRouteLength/travelTime)*3.6;
+    startCell = getCellId(a, linkIdArray, numberOfCells, cellSize);
+    endCell = getCellId(b, linkIdArray, numberOfCells, cellSize);
+    kaka = setCellSpeedTaxi(startCell, endCell, v, totalNumberOfCells);
+    
+    A(1,timeStampData(i,1):timeStampData(i,2))= v;
+    
+    for apa = 1:50
+        if ~isnan(kaka(apa))
+            K(1,apa,:) = A;
+        end
+    end
+end
+k = K;
+
+end
