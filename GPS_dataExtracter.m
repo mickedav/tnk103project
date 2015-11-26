@@ -41,8 +41,13 @@ core.Monitor.set_cid(CONFIGURATIONID);
 network = Network();
 import util.NetworkAnalysis
 dbr = DatabaseReader();
-
-
+ 
+start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,26,8,0,0,0);
+end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,26,10,0,0,0);
+startTimeStampString = char(start_TimeStamp.toString);
+startTimeStampString = ['''' startTimeStampString '''']
+endTimeStampString = char(end_TimeStamp.toString);
+endTimeStampString = ['''' endTimeStampString '''']
 query = ['SELECT * FROM info24_feed.taxi_tt '...
     'WHERE(startlid = 11269 OR startlid = 14136 '...
     'OR startlid = 6189 OR startlid = 8568 '...
@@ -51,7 +56,7 @@ query = ['SELECT * FROM info24_feed.taxi_tt '...
     'AND(endlid = 11269 OR endlid = 14136 OR endlid = 6189 OR endlid = 8568 '...
     'OR endlid = 15256 OR endlid = 9150 OR endlid = 38698 '...
     'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) '...
-    'AND (start_time BETWEEN ''2013-03-21 08:00:00'' AND ''2013-03-21 10:00:00'') AND isvalid '...
+    ['AND (start_time BETWEEN ' startTimeStampString ' AND ' endTimeStampString ') AND isvalid ']...
     'ORDER BY start_time'];
 
 %   query = 'SELECT * FROM info24_feed.taxi_tt WHERE(startlid = 11269 OR startlid = 14136 OR startlid = 6189 OR startlid = 8568 OR startlid = 15256 OR startlid = 9150 OR startlid = 38698 OR startlid = 9160 OR startlid = 71687 OR startlid = 9198) AND(endlid = 11269 OR endlid = 14136 OR endlid = 6189 OR endlid = 8568 OR endlid = 15256 OR endlid = 9150 OR endlid = 38698 OR endlid = 9160 OR endlid = 71687 OR endlid = 9198)AND DATE(start_time) = "2013-03-21" AND isvalid ORDER BY start_time';
@@ -64,8 +69,7 @@ catch
     'NOOOOOOOO!!!!!'
 end
 
-start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,8,0,0,0);
-end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,10,0,0,0);
+
 numberOfTimeStepsTemp = TimeInterval(start_TimeStamp, end_TimeStamp);
 numberOfTimeSteps = numberOfTimeStepsTemp.get_time_interval_duration;
 
@@ -79,7 +83,6 @@ row = 1;
 intData = zeros(121,3);
 doubleData = zeros(121,2);
 timeStampData = zeros(121,2);
-h = 1;
 while dbr.psRSNext('test');
     
     for i = 1:size(wantedDataInt)
@@ -100,28 +103,15 @@ while dbr.psRSNext('test');
         timeStampData(row,i) = time_stamp_temp.get_time_interval_duration;
     end
     row = row + 1;
-    h = h + 1;
-    
 end
 
 row = row - 1;
 analyst = NetworkAnalysis(network);
 
 
-[k, endSec, teori] = setCellSpeed(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
+[hoppas, endSec] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
 
 
-for i= 1:endSec
-    for j = 1:50
-    	hoppas(i,j) = nanmean(k(:,j,i));
-    end
-end
-
-for j = 1:endSec
-    hoppas2(j,1:50) = max(hoppas(j,:));
-end
-hoppas = hoppas';
-hoppas2 = hoppas2';
 % figure(1)
 
 % load('mycmap','cm')
@@ -135,10 +125,5 @@ imagesc(hoppas(21:50,:));
 colormap(cm)
 colorbar
 
-figure(2)
-load('mycmap','cm')
-imagesc(hoppas2(21:50,:));
-colormap(cm)
-colorbar
 
 
