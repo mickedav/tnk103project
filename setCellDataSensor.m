@@ -33,7 +33,7 @@ currentNumberOfCells = 0;
     link=sensor(indexArray(n)).link.id;
 % index is the segment number (1-10)
     index = find(linkIdArray == link);
-
+% 
 for i=(index-1):-1:1
    currentNumberOfCells = currentNumberOfCells + numberOfCells(i);
 end

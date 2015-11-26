@@ -83,7 +83,7 @@ sensorAllCellsSpeedArray(indexArray(1)+i,1) = sensorCellSpeedArray(indexArray(1)
 end
 end
 %%
-
+% 
 
 
 %% Spara ny colomap: %%
