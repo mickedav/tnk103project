@@ -9,7 +9,7 @@ formatOut = 'HH:MM';
 startTimeNum = datenum(datestr(startTimeString,formatOut));
 endTimeNum = datenum(datestr(endTimeString,formatOut));
 
-xData = linspace(startTimeNum,endTimeNum,numberOfTimeSteps/30 + 1)
+xData = linspace(startTimeNum,endTimeNum,numberOfTimeSteps/30 + 1);
 
 % load the colormap from mycmap.mat 
 load('mycmap','cm')
@@ -20,6 +20,6 @@ colorbar;
 % ax = handle(gca);
 % ax.XTick = xData;
 % datetick('x',formatOut,'keepticks')
-% set('XTick',xData)
+% % set('XTick',xData)
 
 end

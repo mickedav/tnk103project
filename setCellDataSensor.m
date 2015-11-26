@@ -39,11 +39,15 @@ for i=(index-1):-1:1
 end
     cellWithSensor=ceil(sensorOffset(n)/cellSize(index));
 % If there is a sensor located in the cell, the element is set to speed.
+ 
+    if sensorCellSpeedArray(currentNumberOfCells+cellWithSensor,1)~= 0
+       
+        sensorCellSpeedArray(currentNumberOfCells+cellWithSensor,:)= (sensorSpeedArray(:,n)+sensorSpeedArray(:,n-1))./2;
+    else
     sensorCellSpeedArray(currentNumberOfCells+cellWithSensor,:)=sensorSpeedArray(:,n);
-    
+    end
 % travel times is given in seconds
     sensorCellTravelTimesArray(currentNumberOfCells+cellWithSensor,:)=cellSize(index)./sensorSpeedArray(:,n);
 end
-
 
 end

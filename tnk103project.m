@@ -63,10 +63,10 @@ endTime = Time.newTimeFromBerkeleyDateTime(2013,03,21,10,0,0,0);
 %%
 
 %% plot heat maps of stretch speeds and travel times 
-% figure(1)
+figure(1)
 plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
-% figure(2)
-% plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
+figure(2)
+plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
 %%
 
 %% algoritm 1 - only for radar sensors 
