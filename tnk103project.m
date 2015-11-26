@@ -8,7 +8,7 @@ close all
 % 
 % 
 % % Adding a path to the top folder.
-% addpath(genpath('H:\TNK103\'),'-end');
+%  addpath(genpath('H:\TNK103\'),'-end');
 % % 
 import core.*               %Core classes
 
@@ -40,14 +40,8 @@ end
     core.Monitor.set_nid(NETWORKID);
     core.Monitor.set_cid(CONFIGURATIONID);
 
-% Kan behövas
-% fundamentalDiagramObject = datatypes.FundamentalDiagramParameters(network, CONFIGURATIONID);
-
 % Creating a network object.
 network = Network();
-
-% linksInNetwork = fundamentalDiagramObject.getAvalibleAreas;
-% f = fundamentalDiagramObject.readFromDatabaseAsTable(linksInNetwork(1));
 
 %% Declare which sensors and links that are to be used and the selected start and end time.
 sensorIdArray = [244 243 239 238 236 235 231 230 229 227 226 225 224 223 222 221];
@@ -69,11 +63,28 @@ endTime = Time.newTimeFromBerkeleyDateTime(2013,03,21,10,0,0,0);
 %%
 
 %% plot heat maps of stretch speeds and travel times 
-figure(1)
+% figure(1)
 plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
-figure(2)
-plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
+% figure(2)
+% plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
 %%
+
+%% algoritm 1 - only for radar sensors 
+sensorAllCellsSpeedArray = sensorCellSpeedArray;
+indexArray = find(sensorCellSpeedArray(:,1));
+
+
+for k = 1:size(indexArray,1)
+indexDifference = (indexArray(2)-indexArray(1));
+speedDifference=(sensorCellSpeedArray(indexArray(2),1)-sensorCellSpeedArray(indexArray(1),1))/indexDifference;
+
+for i = 1:(indexDifference-1)
+sensorAllCellsSpeedArray(indexArray(1)+i,1) = sensorCellSpeedArray(indexArray(1),1) + i*speedDifference;
+end
+end
+%%
+
+
 
 %% Spara ny colomap: %%
 % 1. Kör följande i m-fil.

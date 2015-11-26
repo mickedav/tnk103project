@@ -26,6 +26,7 @@ sensorCellSpeedArray = zeros(totalNumberOfCells, numberOfTimeSteps);
 sensorCellTravelTimesArray = zeros(totalNumberOfCells,numberOfTimeSteps);
 
 for n=1:numberOfSensors
+    
 currentNumberOfCells = 0;
 % size(sensorIdArray,2)
 
@@ -36,10 +37,10 @@ currentNumberOfCells = 0;
 for i=(index-1):-1:1
    currentNumberOfCells = currentNumberOfCells + numberOfCells(i);
 end
-    
     cellWithSensor=ceil(sensorOffset(n)/cellSize(index));
 % If there is a sensor located in the cell, the element is set to speed.
     sensorCellSpeedArray(currentNumberOfCells+cellWithSensor,:)=sensorSpeedArray(:,n);
+    
 % travel times is given in seconds
     sensorCellTravelTimesArray(currentNumberOfCells+cellWithSensor,:)=cellSize(index)./sensorSpeedArray(:,n);
 end
