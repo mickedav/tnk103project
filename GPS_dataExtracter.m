@@ -21,10 +21,9 @@ end
 import java.lang.*          %String classes
 import java.util.*          %Wrapper classes
 import core.*               %Core classes
-import matrix.*             %Matrix classes
 import netconfig.*          %Network clases
-import bAE.*               %Output data classes not needed in this example
-import highwaycommon.*      %Parameter classes
+
+import bAE.*                %Output data classes not needed in this example
 %import highwayflowmodel.*  %Flow model classes not needed in this example
 %import highway.*           %Highway classes not needed in this example
 
@@ -39,7 +38,7 @@ core.Monitor.set_nid(NETWORKID);
 core.Monitor.set_cid(CONFIGURATIONID);
 
 network = Network();
-import util.NetworkAnalysis
+import util.NetworkAnalysis.*
 dbr = DatabaseReader();
  
 start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,26,8,0,0,0);
