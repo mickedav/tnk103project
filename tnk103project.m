@@ -70,21 +70,9 @@ plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
 %%
 
 %% algoritm 1 - only for radar sensors 
-sensorAllCellsSpeedArray = sensorCellSpeedArray;
-indexArray = find(sensorCellSpeedArray(:,1));
-
-
-for k = 1:size(indexArray,1)
-indexDifference = (indexArray(2)-indexArray(1));
-speedDifference=(sensorCellSpeedArray(indexArray(2),1)-sensorCellSpeedArray(indexArray(1),1))/indexDifference;
-
-for i = 1:(indexDifference-1)
-sensorAllCellsSpeedArray(indexArray(1)+i,1) = sensorCellSpeedArray(indexArray(1),1) + i*speedDifference;
-end
-end
+% [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray);
 %%
 % 
-
 
 %% Spara ny colomap: %%
 % 1. Kör följande i m-fil.
