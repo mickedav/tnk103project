@@ -1,0 +1,27 @@
+function [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexSensorArray,linkIdArray);
+
+sensorAllCellsSpeedArray = sensorCellSpeedArray;
+indexSensorArray = find(sensorCellSpeedArray(:,1));
+
+for j=1:numberOfTimeSteps
+    
+    for k = 2:size(indexSensorArray,1)
+        indexDifference = (indexSensorArray(k)-indexSensorArray(k-1));
+        speedDifference=(sensorCellSpeedArray(indexSensorArray(k),j)-sensorCellSpeedArray(indexSensorArray(k-1),j))/indexDifference;
+        
+        for i = 1:(indexDifference-1)
+            sensorAllCellsSpeedArray(indexSensorArray(k-1)+i,j) = sensorCellSpeedArray(indexSensorArray(k-1),j) + i*speedDifference;
+        end
+    end
+end
+
+% do not calculate the travel times for cells before the first sensor
+for t=indexSensorArray(1):totalNumberOfCells
+    link=sensor(indexArray(n)).link.id;
+% index is the segment number (1-10)
+    index = find(linkIdArray == link);
+    
+    sensorAllCellsTravelTimesArray = cellSize(index)./sensorCellSpeedArray(:,t);
+end
+
+end
