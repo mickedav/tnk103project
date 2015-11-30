@@ -47,17 +47,18 @@ firstDay = 4;
 numberOfDays = 1;
 numberOfWeeks = 1;
 
-for day = 1:numberOfDays
+ for day = 1:numberOfDays
     
-    for week = 1:numberOfWeeks
+%      for week = 1:numberOfWeeks
         
-        date = firstDay-1+day+(week-1)*7
+%         date = firstDay-1+day+(week-1)*7
+date = 21;
         
         %% Declare which sensors and links that are to be used and the selected start and end time.
         sensorIdArray = [244 243 239 238 236 235 231 230 229 227 226 225 224 223 222 221];
         linkIdArray = [11269 14136 6189 8568 15256 9150 38698 9160 71687 9198];
-        startTime = Time.newTimeFromBerkeleyDateTime(2013,03,date,6,30,0,0);
-        endTime = Time.newTimeFromBerkeleyDateTime(2013,03,date,9,30,0,0);
+        startTime = Time.newTimeFromBerkeleyDateTime(2013,03,date,6,0,0,0);
+        endTime = Time.newTimeFromBerkeleyDateTime(2013,03,date,10,0,0,0);
         %%
         
         %% get all the sensors' speed and flow for each timestep
@@ -72,10 +73,11 @@ for day = 1:numberOfDays
         [sensorCellSpeedArray, sensorCellTravelTimesArray,indexArray]=setCellDataSensor(numberOfCells,network,sensorIdArray,totalNumberOfCells,numberOfTimeSteps,numberOfSensors,linkIdArray,cellSize,sensorSpeedArray);
         %%
         % spara för varje vecka
-        sensorCellSpeedArrayWeek(week,:,:) = sensorCellSpeedArray;
+%         sensorCellSpeedArrayWeek(week,:,:) = sensorCellSpeedArray;
+        
         %% plot heat maps of stretch speeds and travel times
-        %     figure(day)
-        %     plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
+            figure(day)
+            plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
         % figure(2)
         % plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
         %%
@@ -86,7 +88,7 @@ for day = 1:numberOfDays
     %    sensorCellSpeedArrayDay(day,:,:)
     
     
-end
+% end
 
 %% algoritm 1 - only for radar sensors
 [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
