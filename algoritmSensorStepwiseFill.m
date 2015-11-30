@@ -1,4 +1,4 @@
-function [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray)
+function [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize)
 
 sensor = network.getRadarSensors;
 
@@ -17,19 +17,28 @@ for j=1:numberOfTimeSteps
     end
 end
 
-hej
+% % % % % % FIXA HÄR
+% link=sensor(25).link.id
 
-% % % % % % % FIXA HÄR 
-% % link=sensor(25).link.id
-% 
-% % do not calculate the travel times for cells before the first sensor
-% for t=indexSensorArray(1):totalNumberOfCells
-% % indexSensorArray(t+1-indexSensorArray(1))
-%     link=sensor(indexArray(indexSensorArray(t+1-indexSensorArray(1)))).link.id
-% % index is the segment number (1-10)
-%     index = find(linkIdArray == link);
-%     
-%     sensorAllCellsTravelTimesArray = cellSize(index)./sensorCellSpeedArray(:,t);
-% end
+
+% do not calculate the travel times for cells before the first sensor
+for t=indexSensorArray(1):totalNumberOfCells
+    currentNumberOfCells = 0;
+    index = 0;
+   
+    for i=1:size(numberOfCells,2)
+        currentNumberOfCells =  currentNumberOfCells + numberOfCells(i);
+        index = index + 1;
+%         break if cell t is on link number index
+        if (t/currentNumberOfCells) <=1
+            
+            break;
+            
+        end
+        
+    end
+    
+    sensorAllCellsTravelTimesArray(t,:) = cellSize(index)./sensorAllCellsSpeedArray(t,:);
+end
 
 end
