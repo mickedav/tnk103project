@@ -42,12 +42,14 @@ dbr = DatabaseReader();
 analyst = NetworkAnalysis(network);
 
 
-nbrDays = 4 ;
+nbrDays = 2 ;
 start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59);
 end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
 GpsSpeedData = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
 GpsSpeedDataDay = squeeze(GpsSpeedData(1,:,:));
 
+T = squeeze(GpsSpeedData(1,:,:) - GpsSpeedData(2,:,:));
+T = abs(T);
 for i = 1:nbrDays
     GpsSpeedDataDay = squeeze(GpsSpeedData(i,:,:));
     figure(i)
