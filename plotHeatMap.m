@@ -29,11 +29,19 @@ end
 load('mycmap','cm')
 imagesc(temp);
 colormap(cm);
-colorbar;
+c=colorbar;
 
 % set the tick labels on the x-axis
 set(gca,'XLim',[0 numberOfTimeSteps])
 set(gca,'XTick',[0:timeStep:numberOfTimeSteps])
 set(gca,'XTickLabel',xDataStr)
+
+formatOut = 'yyyy-mm-dd';
+startTimestr = datestr(startTimeString,formatOut)
+
+title(startTimestr)
+xlabel('time')
+ylabel('cell ID')
+ylabel(c,'km/h')
 
 end

@@ -43,9 +43,11 @@ core.Monitor.set_cid(CONFIGURATIONID);
 % Creating a network object.
 network = Network();
 
-firstDay = 4;
+% 2013 mars: monday=4,11,18 tuesday=
+
+firstDay = 8;
 numberOfDays = 1;
-numberOfWeeks = 4;
+numberOfWeeks = 3;
 
 for day = 1:numberOfDays
     
@@ -76,19 +78,27 @@ for day = 1:numberOfDays
         sensorCellSpeedArrayWeek(:,:,week) = sensorCellSpeedArray;
         
         %% plot heat maps of stretch speeds and travel times
-%         figure(date)
-
+        figure(date)
+       
         plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
-
-        %         figure(date)
-        %         plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
+        
+%                 figure(date)
+%                 plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
         %%
     end
     
     
-    %    räkna fram medelvärde för day, spara i 3D matrix
-    %    sensorCellSpeedArrayDay(day,:,:)
+%          sensorCellSpeedArrayDay(:,:,day);
     
+%     ett=sensorCellSpeedArrayWeek(:,:,1);
+%     tva=sensorCellSpeedArrayWeek(:,:,2);
+%     tva=sensorCellSpeedArrayWeek(:,:,3);
+% 
+%     diff = abs(sensorCellSpeedArrayWeek(:,:,1)-sensorCellSpeedArrayWeek(:,:,2)).*3.6;
+%     figure(1)
+%     plotHeatMap(diff,startTime, endTime, numberOfTimeSteps);
+%     
+%     meanOfDifference = mean(nonzeros(diff));
     
 end
 
@@ -96,7 +106,8 @@ end
 [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
 %%
 %
-
+%          figure(date)
+%         plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
 
 
 %% Spara ny colomap: %%
