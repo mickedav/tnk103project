@@ -2,15 +2,13 @@ function [cellSpeed2, endSec] = setCellSpeedDay(intData, doubleData, timeStampDa
 import netconfig.*
 
 [numberOfCells, cellSize, lengthStretch, totalNumberOfCells] = getCellMap(network, linkIdArray);
-startSec = min(timeStampData(:,1));
-endSec = 7200 + 3600;
-clear K
+startSec = 0;
+endSec = 10860;
 K = NaN(row,totalNumberOfCells,endSec);
 hej = 1;
 
 for i = 1:row
     A = NaN(1,endSec);
-    timeStampData(i,2)
     a = Spot(network.getLinkWithID(intData(i,1)), doubleData(i,1), -1);
     b = Spot(network.getLinkWithID(intData(i,2)), doubleData(i,2), -1);
     
