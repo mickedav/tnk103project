@@ -1,8 +1,11 @@
 function [speedData] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp)
+
+%% Function returns speedData, a 3D-matric with (day, cell, minute)
+
 %Imports
 import java.lang.*          %String classes
 import java.util.*          %Wrapper classes
-import core.*  
+import core.*               %Do we really need core again?
 
 startDay = start_TimeStamp.getDayOfMonth;
 startHour = start_TimeStamp.getHour;
@@ -16,7 +19,6 @@ endMinute = end_TimeStamp.getMinute;
 %analyse data
 
 %Create Time intervall
-nbrDays
 for day = 1:nbrDays
     
     %Starts att ,59,59 to make plot look good
@@ -27,7 +29,7 @@ for day = 1:nbrDays
     endTimeStampString = char(end_TimeStamp.toString);
     endTimeStampString = ['''' endTimeStampString ''''];
     numberOfTimeStepsTemp = TimeInterval(start_TimeStamp, end_TimeStamp);
-    numberOfTimeSteps = numberOfTimeStepsTemp.get_time_interval_duration
+    numberOfTimeSteps = numberOfTimeStepsTemp.get_time_interval_duration;
     
     %% Query to get Taxi Gps-data!
     query = ['SELECT * FROM info24_feed.taxi_tt '...

@@ -1,9 +1,9 @@
-function [cellSpeedAgregated, cellSpeed] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst, row)
+function [cellSpeed2, endSec] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst, row)
 
 % Imports
 import netconfig.*
 
-% Create cellmap using provided network.
+% Create cellmap using provided network. 
 [numberOfCells, cellSize, lengthStretch, totalNumberOfCells] = getCellMap(network, linkIdArray);
 
 % endSec can be passed in function, just to lazy ATM
@@ -36,26 +36,25 @@ for i = 1:row
         A(1,timeStampData(i,1):timeStampData(i,2))= NaN;
     end
     
-    % Fill
+    % Fill 
     for k = 1:totalNumberOfCells
         if ~isnan(getTaxiSpeed(k))
             cellSpeedTemp(i,k,:) = A;
         end
     end
 end
-
-
+k = cellSpeedTemp;
 
 for i = 1:endSec
     for j = 1:totalNumberOfCells
-        cellSpeed(i,j) = nanmean(cellSpeedTemp(:,j,i));
+    	cellSpeed(i,j) = nanmean(k(:,j,i));
     end
 end
 for i = 60:60:endSec - 60
     for j = 1:totalNumberOfCells
-        cellSpeedAgregated(i/60, j) = nanmean(cellSpeed(i:i+59,j));
+        cellSpeed2(i/60, j) = nanmean(cellSpeed(i:i+59,j));
     end
 end
-cellSpeedAgregated = cellSpeedAgregated';
+cellSpeed2 = cellSpeed2';
 
 end

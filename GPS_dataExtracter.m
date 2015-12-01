@@ -43,15 +43,15 @@ analyst = NetworkAnalysis(network);
 
 
 nbrDays = 4 ;
-start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59)
-end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0)
-hoppas = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
-hatt = squeeze(hoppas(1,:,:));
+start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59);
+end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
+GpsSpeedData = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
+GpsSpeedDataDay = squeeze(GpsSpeedData(1,:,:));
 
 for i = 1:nbrDays
-    hatt = squeeze(hoppas(i,:,:));
+    GpsSpeedDataDay = squeeze(GpsSpeedData(i,:,:));
     figure(i)
-    plotHeatMap(hatt, start_TimeStamp, end_TimeStamp, length(hatt));
+    plotHeatMap(GpsSpeedDataDay, start_TimeStamp, end_TimeStamp, length(GpsSpeedDataDay));
 end
 
 
