@@ -1,4 +1,4 @@
-function [speedData] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp)
+function [speedData, speedDataAggregated] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp)
 
 %% Function returns speedData, a 3D-matric with (day, cell, minute)
 
@@ -20,10 +20,7 @@ endMinute = end_TimeStamp.getMinute;
 
 %Create Time intervall
 for day = 1:nbrDays
-    
-    %Starts att ,59,59 to make plot look good
-    
-    
+
     startTimeStampString = char(start_TimeStamp.toString);
     startTimeStampString = ['''' startTimeStampString ''''];
     endTimeStampString = char(end_TimeStamp.toString);
@@ -39,7 +36,7 @@ for day = 1:nbrDays
         'OR startlid = 9160 OR startlid = 71687 OR startlid = 9198) '...
         'AND(endlid = 11269 OR endlid = 14136 OR endlid = 6189 OR endlid = 8568 '...
         'OR endlid = 15256 OR endlid = 9150 OR endlid = 38698 '...
-        'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) '...
+        'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) AND isvalid '...
         ['AND (start_time BETWEEN ' startTimeStampString ' AND ' endTimeStampString ') ']...
         'ORDER BY start_time'];
     
@@ -51,7 +48,7 @@ for day = 1:nbrDays
         'OR startlid = 9160 OR startlid = 71687 OR startlid = 9198) '...
         'AND(endlid = 11269 OR endlid = 14136 OR endlid = 6189 OR endlid = 8568 '...
         'OR endlid = 15256 OR endlid = 9150 OR endlid = 38698 '...
-        'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) '...
+        'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) AND isvalid '...
         ['AND (start_time BETWEEN ' startTimeStampString ' AND ' endTimeStampString ') ']];
     %%
     
@@ -113,11 +110,12 @@ for day = 1:nbrDays
     end
     row = row - 1;
     
-    [speedData(day,:,:), endSec] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
+    [speedDataAggregatedTime, speedData(day,:,:), endSec, totalNumberOfCells] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
     dbr.psDestroy('test');
     dbr.psDestroy('test2');
     start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,startDay +(day)*7,startHour, startMinute,59,59);
     end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,endDay +(day)*7, endHour, endMinute,0,0);
 end
+speedDataAggregated = aggregate(speedData, endSec, totalNumberOfCells);
 
 end

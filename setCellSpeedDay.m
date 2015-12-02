@@ -1,4 +1,4 @@
-function [cellSpeedAgregated, cellSpeed] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst, row)
+function [cellSpeedAgregated, cellSpeed, endSec, totalNumberOfCells] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst, row)
 
 % Imports
 import netconfig.*
@@ -44,18 +44,20 @@ for i = 1:row
     end
 end
 
+% for i = 1:endSec
+%     for j = 1:totalNumberOfCells
+%         cellSpeed22(i,j) = nanmean(cellSpeedTemp(:,j,i));
+%     end
+% end
 
+cellSpeed = squeeze(nanmean(cellSpeedTemp,1));
 
-for i = 1:endSec
-    for j = 1:totalNumberOfCells
-        cellSpeed(i,j) = nanmean(cellSpeedTemp(:,j,i));
-    end
-end
 for i = 60:60:endSec - 60
     for j = 1:totalNumberOfCells
-        cellSpeedAgregated(i/60, j) = nanmean(cellSpeed(i:i+59,j));
+        cellSpeedAgregated(i/60,j) = nanmean(cellSpeed(j,i:i+59));
     end
 end
+
 cellSpeedAgregated = cellSpeedAgregated';
 
 end

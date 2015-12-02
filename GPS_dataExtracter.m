@@ -8,7 +8,6 @@
 clear all
 import core.*               %Core classes
 
-
 % Setting the enviroment (i.e loading all jar files)
 % We do not wanna set the enviroment if it is allready set.
 try
@@ -22,7 +21,7 @@ import java.lang.*          %String classes
 import java.util.*          %Wrapper classes
 import core.*               %Core classes
 import netconfig.*          %Network clases
-import util.NetworkAnalysis
+import util.*
 import bAE.*                %Output data classes not needed in this example
 %import highwayflowmodel.*  %Flow model classes not needed in this example
 %import highway.*           %Highway classes not needed in this example
@@ -39,17 +38,16 @@ core.Monitor.set_nid(NETWORKID);
 core.Monitor.set_cid(CONFIGURATIONID);
 network = Network();
 dbr = DatabaseReader();
-analyst = NetworkAnalysis(network);
+analyst = util.NetworkAnalysis(network);
 
-
-nbrDays = 3 ;
+nbrDays = 1 ;
 start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59);
 end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
-GpsSpeedData = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
-GpsSpeedDataDay = squeeze(GpsSpeedData(1,:,:));
+[GpsSpeedData, speedDataAggregated] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
 
-T = squeeze(GpsSpeedData(1,:,:) - GpsSpeedData(2,:,:));
-T = abs(T);
+%T = squeeze(GpsSpeedData(1,:,:) - GpsSpeedData(2,:,:));
+%T = abs(T);
+
 for i = 1:nbrDays
     GpsSpeedDataDay = squeeze(GpsSpeedData(i,:,:));
     figure(i)
