@@ -101,28 +101,44 @@ for day = 1:numberOfDays
 end
 
 %% algoritm 1 - only for radar sensors
+[sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
+% figure(date)
+% plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
 %%
 
-%% algoritm 2 
+%% algoritm 2 -
+% fill lengthFromStart with the length from start to half of the cell i:s
+% length
+lengthFromStart = zeros(totalNumberOfCells);
+lengthFromStart(1)=cellSize(1)/2;
 
+for i=1:totalNumberOfCells
+    currentNumberOfCells = 0;
+    index = 0;
+    for j=1:numberOfLinks
+        currentNumberOfCells =  currentNumberOfCells + numberOfCells(j);
+        index = index + 1;
+        %         break if cell t is on link number index
+        if (i/currentNumberOfCells) <=1
+            lengthFromStart(i) = sum(lengthFromStart(:))+lengthFromStart(end) + cellSize(index)./2;
+            break;
+        end
+    end
+end
 %%
-
-%
-%           figure(date)
-%         plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
 
 %% difference between arrays
-    %          sensorCellSpeedArrayDay(:,:,day);
-    
-    %     ett=sensorCellSpeedArrayWeek(:,:,1);
-    %     tva=sensorCellSpeedArrayWeek(:,:,2);
-    %     tva=sensorCellSpeedArrayWeek(:,:,3);
-    %
-    %     diff = abs(sensorCellSpeedArrayWeek(:,:,1)-sensorCellSpeedArrayWeek(:,:,2)).*3.6;
-    %     figure(1)
-    %     plotHeatMap(diff,startTime, endTime, numberOfTimeSteps);
-    %
-    %     meanOfDifference = mean(nonzeros(diff));
+%     sensorCellSpeedArrayDay(:,:,day);
+
+%     ett=sensorCellSpeedArrayWeek(:,:,1);
+%     tva=sensorCellSpeedArrayWeek(:,:,2);
+%     tva=sensorCellSpeedArrayWeek(:,:,3);
+%
+%     diff = abs(sensorCellSpeedArrayWeek(:,:,1)-sensorCellSpeedArrayWeek(:,:,2)).*3.6;
+%     figure(1)
+%     plotHeatMap(diff,startTime, endTime, numberOfTimeSteps);
+%
+%     meanOfDifference = mean(nonzeros(diff));
 %%
 
 %% Spara ny colomap: %%
@@ -155,82 +171,10 @@ end
 % % array c in cellSpeed
 %      c(cellWithSensor,1)=sensorDataArray(1,1);
 %      cellSpeed{index}=c;
-=======
- [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
->>>>>>> origin/master
 %%
 
-%% algoritm 2 -
-% fill lengthFromStart with the length from start to half of the cell i:s
-% length
-lengthFromStart = zeros(totalNumberOfCells);
-lengthFromStart(1)=cellSize(1)/2;
-for i=1:totalNumberOfCells
-currentNumberOfCells = 0;
-index = 0;
-    for j=1:numberOfLinks
-        currentNumberOfCells =  currentNumberOfCells + numberOfCells(j);
-         index = index + 1;
-        %         break if cell t is on link number index
-%         if (t/currentNumberOfCells) <=1
-             lengthFromStart(i) = sum(lengthFromStart(:))+lengthFromStart(end) + cellSize(index)./2
-%         end
-    end
-end        
-        %%
-        
-        %
-        %          figure(date)
-        %         plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
-        
-        %% difference between arrays
-        %          sensorCellSpeedArrayDay(:,:,day);
-        
-        %     ett=sensorCellSpeedArrayWeek(:,:,1);
-        %     tva=sensorCellSpeedArrayWeek(:,:,2);
-        %     tva=sensorCellSpeedArrayWeek(:,:,3);
-        %
-        %     diff = abs(sensorCellSpeedArrayWeek(:,:,1)-sensorCellSpeedArrayWeek(:,:,2)).*3.6;
-        %     figure(1)
-        %     plotHeatMap(diff,startTime, endTime, numberOfTimeSteps);
-        %
-        %     meanOfDifference = mean(nonzeros(diff));
-        %%
-        
-        %% Spara ny colomap: %%
-        % 1. Kör följande i m-fil.
-        %   colormap ('jet')
-        %   title('speed contour plot')
-        %   imagesc(temp);
-        %   colorbar;
-        % 2. Öppna colormapeditor från kommandofönstret och ändra till önskad
-        % layout
-        % 3. Spara layoten i egen variabel från kommandofönstret:
-        % cm=colormap
-        % 4. Spara ner cm i en mat-fil
-        % save mycmap cm
-        %
-        %%
-        
-        %% Sparas endast för om vi vill använda cell arrays
-        % % sensorDataCellArray = cell(size(linkIdArray),1)
-        %
-        % % Initialize cellSpeed which consists of the speed for each cell in each
-        % % link
-        % for i = 1:size(linkIdArray,2)
-        % cellSpeed{i} = zeros(numberOfCells(i),1);
-        % end
-        % % cellSpeed includes index number of arrays. Each array is
-        % % cellWithSensor for each index (cell)
-        %      c=cellSpeed{index};
-        % % Insert the "xxxdata" on place cellWithSensor in array c and then insert the uppdated
-        % % array c in cellSpeed
-        %      c(cellWithSensor,1)=sensorDataArray(1,1);
-        %      cellSpeed{index}=c;
-        %%
-        
-        
-        
-        
-        
-        
+
+
+
+
+
