@@ -1,10 +1,10 @@
-function [cellSpeedAgregated, cellSpeed, endSec, totalNumberOfCells] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst, row)
+function [cellSpeedAgregated, cellSpeed, endSec, totalNumberOfCells,  cellSizeAll] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst, row)
 
 % Imports
 import netconfig.*
 
 % Create cellmap using provided network.
-[numberOfCells, cellSize, lengthStretch, totalNumberOfCells] = getCellMap(network, linkIdArray);
+[numberOfCells, cellSize, lengthStretch, totalNumberOfCells, cellSizeAll] = getCellMap(network, linkIdArray);
 
 % endSec can be passed in function, just to lazy ATM
 endSec = 10860;

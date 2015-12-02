@@ -1,4 +1,4 @@
-function [speedData, speedDataAggregated] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp)
+function [speedData, speedDataAggregated,  cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp)
 
 %% Function returns speedData, a 3D-matric with (day, cell, minute)
 
@@ -110,7 +110,7 @@ for day = 1:nbrDays
     end
     row = row - 1;
     
-    [speedDataAggregatedTime, speedData(day,:,:), endSec, totalNumberOfCells] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
+    [speedDataAggregatedTime, speedData(day,:,:), endSec, totalNumberOfCells, cellSizeAll] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
     dbr.psDestroy('test');
     dbr.psDestroy('test2');
     start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,startDay +(day)*7,startHour, startMinute,59,59);
