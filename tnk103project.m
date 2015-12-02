@@ -8,7 +8,7 @@ close all
 %
 %
 % % Adding a path to the top folder.
-%     addpath(genpath('H:\TNK103\'),'-end');
+%      addpath(genpath('H:\TNK103\'),'-end');
 % %
 import core.*               %Core classes
 
@@ -164,15 +164,16 @@ end
 % fill lengthFromStart with the length from start to half of the cell i:s
 % length
 lengthFromStart = zeros(totalNumberOfCells);
-
+lengthFromStart(1)=cellSize(1)/2;
 for i=1:totalNumberOfCells
 currentNumberOfCells = 0;
+index = 0;
     for j=1:numberOfLinks
         currentNumberOfCells =  currentNumberOfCells + numberOfCells(j);
-        
+         index = index + 1;
         %         break if cell t is on link number index
 %         if (t/currentNumberOfCells) <=1
-%             lengthFromStart(i)=
+             lengthFromStart(i) = sum(lengthFromStart(:))+lengthFromStart(end) + cellSize(index)./2
 %         end
     end
 end        
