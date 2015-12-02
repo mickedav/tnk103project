@@ -79,19 +79,36 @@ for day = 1:numberOfDays
         
         
         %% plot heat maps of stretch speeds and travel times
-                figure(date)
-                plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
+%                 figure(date)
+%                 plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'date');
         
         %                 figure(date)
-        %                 plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
+        %                 plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps,'date');
         %%
     end
 
-    %     calculate mean
+    %%      calculate mean of e.g. Thursdays
     sensorCellMeanSpeedArray = nanmean(sensorCellSpeedArrayWeek,3);
-    h=figure(1)
-    plotHeatMap(sensorCellMeanSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
-    print(h,'-dpng','H:\TNK103\plots\thursdayMean.png')
+%     h=figure(1)
+%     plotHeatMap(sensorCellMeanSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'Thursdays');
+%     print(h,'-dpng','H:\TNK103\plots\thursdayMean.png')
+   %%
+  
+end
+
+%% algoritm 1 - only for radar sensors
+% [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
+%%
+
+%% algoritm 2 
+
+%%
+
+%
+%          figure(date)
+%         plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
+
+%% difference between arrays
     %          sensorCellSpeedArrayDay(:,:,day);
     
     %     ett=sensorCellSpeedArrayWeek(:,:,1);
@@ -103,16 +120,7 @@ for day = 1:numberOfDays
     %     plotHeatMap(diff,startTime, endTime, numberOfTimeSteps);
     %
     %     meanOfDifference = mean(nonzeros(diff));
-    
-end
-
-%% algoritm 1 - only for radar sensors
-[sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
 %%
-%
-%          figure(date)
-%         plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
-
 
 %% Spara ny colomap: %%
 % 1. Kör följande i m-fil.

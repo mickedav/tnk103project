@@ -1,10 +1,10 @@
 
-function [] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps)
+function [] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString)
 % to use this function, the array temp needs to be an array of size[rows=numberOfcells, columns=numberOfTimesteps]
 
 % replace all NaN:s with zeros in order to get a nice plot with the same
 % colors on the colorbar
- temp(isnan(temp)) = 0;
+temp(isnan(temp)) = 0;
 
 % the preferred time step (in minutes) between the ticks on the x-axis
 timeStep = 30;
@@ -27,7 +27,7 @@ xDataNum = linspace(startTimeNum,endTimeNum,ticks);
 % format 'HH:MM'
 xDataStr = cell(ticks,1);
 for i=1:(ticks)
-xDataStr{i} =[datestr(xDataNum(i),formatOut)];
+    xDataStr{i} =[datestr(xDataNum(i),formatOut)];
 end
 
 % load the saved color map from mycmap.mat and plot temp
@@ -42,7 +42,12 @@ set(gca,'XTick',[0:timeStep:numberOfTimeSteps])
 set(gca,'XTickLabel',xDataStr)
 
 formatOut = 'yyyy-mm-dd';
-startTimestr = datestr(startTimeString,formatOut);
+
+if strcmp(titleString,'date')
+    startTimestr = datestr(startTimeString,formatOut);
+else
+    startTimestr = titleString;
+end
 
 title(startTimestr)
 xlabel('time')
