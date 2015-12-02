@@ -20,7 +20,7 @@ endMinute = end_TimeStamp.getMinute;
 
 %Create Time intervall
 for day = 1:nbrDays
-
+    
     startTimeStampString = char(start_TimeStamp.toString);
     startTimeStampString = ['''' startTimeStampString ''''];
     endTimeStampString = char(end_TimeStamp.toString);

@@ -51,10 +51,23 @@ end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
 for i = 1:nbrDays
     GpsSpeedDataDay = squeeze(GpsSpeedData(i,:,:));
     figure(i)
-    plotHeatMap(GpsSpeedDataDay, start_TimeStamp, end_TimeStamp, length(GpsSpeedDataDay));
+    plotHeatMap(GpsSpeedDataDay, start_TimeStamp, end_TimeStamp, length(GpsSpeedDataDay), 'hej');
 end
 
 
-
-
-
+hgload('FigurTest.fig');
+myhandle = findall(gcf,'type','image');
+data = get(myhandle,'cdata');
+datac = size(data,1);
+xm = 1;
+time = 181;
+while (xm(end) < datac-1 )
+    if time <10000
+    xm(end+1) = xm(end) + round(data(xm(end),time)/0.6);
+    time = time + 1;
+    else
+        break;
+    end
+end
+hold on
+plot(181:(size(xm,2)+180),xm,'LineWidth',8)

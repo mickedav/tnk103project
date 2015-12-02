@@ -4,7 +4,6 @@ function [numberOfCells, cellSize, lengthStretch, totalNumberOfCells] = getCellM
     cellSize = 0;
     lengthStretch = 0;
 
-  
     for j = linkIdArray    
         link = network.getLinkWithID(j);
         numberOfCells(end+1) = link.getNbCells;
