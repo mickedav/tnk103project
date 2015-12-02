@@ -22,8 +22,8 @@ indexArray = indexArray(2:end);
 
 % sensorInCell = zeros(totalNumberOfCells,1);
 
-sensorCellSpeedArray = zeros(totalNumberOfCells, numberOfTimeSteps);
-sensorCellTravelTimesArray = zeros(totalNumberOfCells,numberOfTimeSteps);
+sensorCellSpeedArray = NaN(totalNumberOfCells, numberOfTimeSteps);
+sensorCellTravelTimesArray = NaN(totalNumberOfCells,numberOfTimeSteps);
 
 for n=1:numberOfSensors
     
@@ -40,7 +40,7 @@ end
     cellWithSensor=ceil(sensorOffset(n)/cellSize(index));
 % If there is a sensor located in the cell, the element is set to speed.
  
-    if sensorCellSpeedArray(currentNumberOfCells+cellWithSensor,1)~= 0
+    if ~isnan(sensorCellSpeedArray(currentNumberOfCells+cellWithSensor,1))
        
         sensorCellSpeedArray(currentNumberOfCells+cellWithSensor,:)= (sensorSpeedArray(:,n)+sensorSpeedArray(:,n-1))./2;
     else

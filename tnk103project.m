@@ -8,7 +8,7 @@ close all
 %
 %
 % % Adding a path to the top folder.
-%   addpath(genpath('H:\TNK103\'),'-end');
+%    addpath(genpath('H:\TNK103\'),'-end');
 % %
 import core.*               %Core classes
 
@@ -45,7 +45,7 @@ network = Network();
 
 % 2013 mars: monday=4,11,18 tuesday=
 
-firstDay = 8;
+firstDay = 7;
 numberOfDays = 1;
 numberOfWeeks = 3;
 
@@ -77,28 +77,32 @@ for day = 1:numberOfDays
         % spara för varje vecka
         sensorCellSpeedArrayWeek(:,:,week) = sensorCellSpeedArray;
         
-        %% plot heat maps of stretch speeds and travel times
-        figure(date)
-       
-        plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
         
-%                 figure(date)
-%                 plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
+        %% plot heat maps of stretch speeds and travel times
+                figure(date)
+                plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
+        
+        %                 figure(date)
+        %                 plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps);
         %%
     end
+
+    %     calculate mean
+    sensorCellMeanSpeedArray = nanmean(sensorCellSpeedArrayWeek,3);
+    h=figure(1)
+    plotHeatMap(sensorCellMeanSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps);
+    print(h,'-dpng','H:\TNK103\plots\thursdayMean.png')
+    %          sensorCellSpeedArrayDay(:,:,day);
     
-    
-%          sensorCellSpeedArrayDay(:,:,day);
-    
-%     ett=sensorCellSpeedArrayWeek(:,:,1);
-%     tva=sensorCellSpeedArrayWeek(:,:,2);
-%     tva=sensorCellSpeedArrayWeek(:,:,3);
-% 
-%     diff = abs(sensorCellSpeedArrayWeek(:,:,1)-sensorCellSpeedArrayWeek(:,:,2)).*3.6;
-%     figure(1)
-%     plotHeatMap(diff,startTime, endTime, numberOfTimeSteps);
-%     
-%     meanOfDifference = mean(nonzeros(diff));
+    %     ett=sensorCellSpeedArrayWeek(:,:,1);
+    %     tva=sensorCellSpeedArrayWeek(:,:,2);
+    %     tva=sensorCellSpeedArrayWeek(:,:,3);
+    %
+    %     diff = abs(sensorCellSpeedArrayWeek(:,:,1)-sensorCellSpeedArrayWeek(:,:,2)).*3.6;
+    %     figure(1)
+    %     plotHeatMap(diff,startTime, endTime, numberOfTimeSteps);
+    %
+    %     meanOfDifference = mean(nonzeros(diff));
     
 end
 
