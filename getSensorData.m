@@ -21,6 +21,9 @@ for i = 1:numberOfSensors
     sensorId = Integer(sensorIdArray(i));
     sensorData = output.SensorOutput.getSensorOutput(network,sensorId,startTime,endTime);
     sensorDataSpeed = sensorData.speed;
+    sensorDataVar = sensorData.speedStdDev;
+% hämta varians och räkna ut space mean time.
+% spacemean=timemean-var^2/timemean
     sensorDataFlow = sensorData.flow;
     
     numberOfRealTimeSteps = size(sensorDataFlow,1);
