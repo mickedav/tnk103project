@@ -53,7 +53,7 @@ numberOfLinks = size(linkIdArray,2);
 
 % 2013 mars: monday=4,11,18 tuesday=
 
-firstDay = 21;
+firstDay = 7;
 numberOfDays = 1;
 numberOfWeeks = 1;
 
@@ -83,9 +83,11 @@ for day = 1:numberOfDays
         
         
         %% plot heat maps of stretch speeds and travel times
-        figure(date)
-        plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'date');
-        
+%         h=figure(date);
+%         plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'date');
+                               
+%         filename1 = sprintf('H:\\TNK103\\plots\\%d', date)
+%         print(h,'-dpng',filename1)
         %                 figure(date)
         %                 plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps,'date');
         %%
@@ -93,30 +95,32 @@ for day = 1:numberOfDays
     
     %%      calculate mean of e.g. Thursdays
     sensorCellMeanSpeedArray = nanmean(sensorCellSpeedArrayWeek,3);
-    %     h=figure(1)
-    %     plotHeatMap(sensorCellMeanSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'Thursdays');
-    %     print(h,'-dpng','H:\TNK103\plots\thursdayMean.png')
+%          h=figure(1)
+%          plotHeatMap(sensorCellMeanSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'Thursdays');
+%          print(h,'-dpng','H:\TNK103\plots\thursdayMean.png')
     %%
     
 end
 
 %% algorithm 1 - radar sensors, only space fill
 [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
-figure(1)
+h=figure(1)
 plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 1: Only space fill');
+print(h,'-dpng','H:\TNK103\plots\algorithm1For7mars.png')
 %%
 
 %% algorithm 2 - radar sensors, spatiotemporal interpolation
-figure(2)
+h=figure(2)
 estimatedSpeedAlg2 = algorithm2(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
 plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 2: Spatiotemporal Interpolation');
+print(h,'-dpng','H:\TNK103\plots\algorithm2For7mars.png')
 %%
 
 %% algorithm 3 - radar sensors, adaptive smoothing method
-figure(3)
+h=figure(3)
 estimatedSpeedAlg3 = algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
 plotHeatMap(estimatedSpeedAlg3.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 3: Adaptive Smoothing Method');
-
+print(h,'-dpng','H:\TNK103\plots\algorithm3For7mars.png')
 %%
 
 
