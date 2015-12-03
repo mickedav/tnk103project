@@ -40,7 +40,7 @@ network = Network();
 dbr = DatabaseReader();
 analyst = util.NetworkAnalysis(network);
 
-nbrDays = 1;
+nbrDays = 2;
 start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59);
 end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
 [GpsSpeedData, speedDataAggregated, cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
@@ -50,7 +50,7 @@ end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
 %should be set somewhere else, used in many functions
 endSec = 10860;
 cellSpeedAggregatedTime = aggregateTime(speedDataAggregated, endSec, cellSizeAll);
-
+start_time = 1;
 travelTime = trajectory(cellSpeedAggregatedTime, cellSizeAll, start_time);
 
 %T = squeeze(GpsSpeedData(1,:,:) - GpsSpeedData(2,:,:));
