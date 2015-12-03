@@ -1,34 +1,45 @@
-function [data] = trajectory(cellSpeed, cellSizeAll)
+function [traject] = trajectory(cellSpeed, cellSizeAll, start_time)
 
-currCell = 1;
-minute = 1;
+currCell = 9;
+
+%don't know if this is correct, maybe not if the start time is more than 1
+%hour after the first time in the plot
+%minute = start_time.getMinute;
+
+minute = start_time;
 second = 1;
-data = 0;
+%second = start_time.getSecond;
+totSecond = 1;
+traject = 0;
 deltaDist = 0;
 
-hej1 = size(cellSpeed)
-hej2 = size(squeeze(cellSpeed))
+cellSpeed(isnan(cellSpeed)) = 0; 
 
-while currCell < size(cellSizeAll,2)
-          
-        currSpeed = cellSpeed(currCell,minute);
-        %travelled dist during 1 second
-        deltaDist = deltaDist + currSpeed/3.6;
-             
-        if deltaDist > cellSizeAll(currCell)
-            %still in the same cell
-            deltaDist = 0;
-            currCell = currCell + 1;
-        end
-        
-        if second > 60
-           minute = minute +1;
-           second = 1;            
-        end        
-          
-          data(second) = currCell;
-          second = second + 1;
-          
+while (currCell < size(cellSizeAll,2)) && (minute < size(cellSpeed,2))
+    
+    currSpeed = cellSpeed(currCell,minute);
+  
+    %travelled dist during 1 second
+    %rewrite km/h to m/s (IS THIS NEEDED???) (*1 since one second)
+    deltaDist = deltaDist + (currSpeed/3.6)*1;
+    
+    if deltaDist > cellSizeAll(currCell)
+        %move on to the next cell
+        deltaDist = 0;
+        currCell = currCell + 1;
+    end
+    
+    if second > 60
+        %one minute has passed
+        minute = minute + 1;
+        second = 1;
+    end
+    
+    traject(totSecond) = currCell;
+    %check next second
+    second = second + 1;
+    totSecond = totSecond + 1;
 end
+
 end
 
