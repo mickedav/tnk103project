@@ -53,7 +53,7 @@ numberOfLinks = size(linkIdArray,2);
 
 % 2013 mars: monday=4,11,18 tuesday=
 
-firstDay = 7;
+firstDay = 21;
 numberOfDays = 1;
 numberOfWeeks = 1;
 
