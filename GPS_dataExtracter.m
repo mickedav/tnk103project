@@ -40,33 +40,37 @@ network = Network();
 dbr = DatabaseReader();
 analyst = util.NetworkAnalysis(network);
 
-nbrDays = 1 ;
+nbrDays = 2;
 start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59);
 end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
 [GpsSpeedData, speedDataAggregated, cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
 
+%travelTime = trajectory(speedDataAggregated, cellSizeAll)
 
+%should be set somewhere else, used in many functions
+endSec = 10860;
+cellSpeedAggregatedTime = aggregateTime(speedDataAggregated, endSec, cellSizeAll);
 
 %T = squeeze(GpsSpeedData(1,:,:) - GpsSpeedData(2,:,:));
 %T = abs(T);
 
-% for i = 1:nbrDays
-%     GpsSpeedDataDay = squeeze(GpsSpeedData(i,:,:));
-%     figure(i)
-%     plotHeatMap(GpsSpeedDataDay, start_TimeStamp, end_TimeStamp, length(GpsSpeedDataDay), 'hej');
+%for i = 1:nbrDays
+   % GpsSpeedDataDay = squeeze(GpsSpeedData(i,:,:));
+    %figure(i)
+    plotHeatMap(cellSpeedAggregatedTime, start_TimeStamp, end_TimeStamp, length(cellSpeedAggregatedTime), 'hej');
+%end
+
+% 
+% hgload('figurTest.fig');
+% myhandle = findall(gcf,'type','image');
+% data = get(myhandle,'cdata');
+% datac = size(data,1);
+% xm = 50;
+% time = 1;
+% while (xm(end) < datac)
+%     xm(end+1) = xm(end) + round(data(xm(end),time))
+%     time = time + 1;
 % end
-
-
-hgload('figurTest.fig');
-myhandle = findall(gcf,'type','image');
-data = get(myhandle,'cdata');
-datac = size(data,1);
-xm = 50;
-time = 1;
-while (xm(end) < datac)
-    xm(end+1) = xm(end) + round(data(xm(end),time))
-    time = time + 1;
-end
-
-hold on
-plot(181:(size(xm,2)+180),xm,'LineWidth',8)
+% 
+% hold on
+% plot(181:(size(xm,2)+180),xm,'LineWidth',8)
