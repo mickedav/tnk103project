@@ -8,7 +8,7 @@ close all
 %
 %
 % % Adding a path to the top folder.
-%      addpath(genpath('H:\TNK103\'),'-end');
+%       addpath(genpath('H:\TNK103\'),'-end');
 % %
 import core.*               %Core classes
 
@@ -53,7 +53,7 @@ numberOfLinks = size(linkIdArray,2);
 
 % 2013 mars: monday=4,11,18 tuesday=
 
-firstDay = 4;
+firstDay = 7;
 numberOfDays = 1;
 numberOfWeeks = 1;
 
@@ -83,8 +83,8 @@ for day = 1:numberOfDays
         
         
         %% plot heat maps of stretch speeds and travel times
-        %                 figure(date)
-        %                 plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'date');
+                        figure(date)
+                        plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'date');
         
         %                 figure(date)
         %                 plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps,'date');
@@ -100,13 +100,19 @@ for day = 1:numberOfDays
     
 end
 
-%% algoritm 1 - only for radar sensors
+%% algorithm 1 - only for radar sensors
 [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
-figure(date)
-plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'hej');
+figure(1)
+plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'algorithm 1: only space fill');
 %%
 
-%% START OF ALGORTIHM 2
+%% algorithm 2
+figure(2)
+estimatedSpeed = algorithmSpatiotempInterpol(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
+plotHeatMap(estimatedSpeed.*3.6,startTime, endTime, numberOfTimeSteps, 'algorithm 2: Spatiotemporal Interpolation');
+%% 
+
+%% algorithm 3
 % fill lengthFromStartHalf with the length from start to half of the cell
 % for each cell
 % fill lengthFromStartReal with the length from start to the end of the
@@ -147,9 +153,8 @@ sigma = averageDistanceSensor/2;
 % tau is set to half of the aggregated interval (1 min)
 tau = 0.5;
 %%
-
-% %  ------------ FORTSÄTT HÄR -----------------
-% for t=numberOfTimeSteps
+estimatedSpeed = sensorCellSpeedArray;
+for t=2:(numberOfTimeSteps-1)
     
     % loop through all the sensors
     for i=2:(numberOfSensors-1)
@@ -170,24 +175,18 @@ tau = 0.5;
                 x = lengthFromStartHalf(cell);
                 x1 = lengthFromStartHalf(sensor1);
                 x2 = lengthFromStartHalf(sensor2);
-                t = 2;
                 t1 = t-1;
                 t2 = t+1;
                 
-                N(cell,2) = exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau))) + exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)));
-                sumNv(cell,2) = exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau)))*sensorCellSpeedArray(sensor1,t1) + exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)))*sensorCellSpeedArray(sensor2,t2);
-                
+                N(cell,t) = exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau))) + exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)));
+                sumNv(cell,t) = exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau)))*sensorCellSpeedArray(sensor1,t1) + exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)))*sensorCellSpeedArray(sensor2,t2);
+                estimatedSpeed(cell,t)=sumNv(cell,t)/N(cell,t);
             end
         end
-        sumNv(cell,2)/N(cell,2)
-%            estimatedSpeed = sensorCellSpeedArray;
-%            estimatedSpeed 
         
     end
-% end
-
-
-%% END OF ALGORTIHM 2
+end
+%% 
 
 %% difference between arrays
 %     sensorCellSpeedArrayDay(:,:,day);

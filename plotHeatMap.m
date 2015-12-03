@@ -6,6 +6,15 @@ function [] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString)
 % colors on the colorbar
 temp(isnan(temp)) = 0;
 
+% switch rows in order to plot with vehicles enter from south
+switchArray = temp;
+
+for i =1:50
+    j=51-i;
+    temp(i,:)=switchArray(j,:);
+
+end
+
 % the preferred time step (in minutes) between the ticks on the x-axis
 timeStep = 30;
 
@@ -40,6 +49,14 @@ c=colorbar;
 set(gca,'XLim',[0 numberOfTimeSteps])
 set(gca,'XTick',[0:timeStep:numberOfTimeSteps])
 set(gca,'XTickLabel',xDataStr)
+
+yDataNum = [50 45 40 35 30 25 20 15 10 5];
+
+set(gca,'YLim',[1 50])
+set(gca,'YTick',[1:5:50])
+set(gca,'YTickLabel',yDataNum)
+% set(gca,'XTickLabel',xDataStr)
+
 
 formatOut = 'yyyy-mm-dd';
 
