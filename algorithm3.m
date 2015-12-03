@@ -1,4 +1,14 @@
-function [estimatedSpeed]=algorithmSpatiotempInterpol(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells)
+function [estimatedSpeed]=algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells)
+% tau is set to half of the aggregated interval (1 min)
+tau = 0.5;
+% propagation velocity for free flow and congested situations, in m/s
+cfree = 70/3.6;
+ccong = -20/3.6;
+% Vc is the threshold between free and congested traffic and deltaV is the
+% transition width around Vc
+Vc = 50/3.6;
+deltaV = 10/3.6;
+%%
 % fill lengthFromStartHalf with the length from start to half of the cell
 % for each cell
 % fill lengthFromStartReal with the length from start to the end of the
@@ -36,9 +46,7 @@ averageDistanceSensor = mean(distanceBetweenSensors);
 %%
 % sigma is calculated as half of the average distance between two sensors
 sigma = averageDistanceSensor/2;
-% tau is set to half of the aggregated interval (1 min)
-tau = 0.5;
-%%
+
 estimatedSpeed = sensorCellSpeedArray;
 for t=2:(numberOfTimeSteps-1)
     
@@ -61,12 +69,22 @@ for t=2:(numberOfTimeSteps-1)
                 x = lengthFromStartHalf(cell);
                 x1 = lengthFromStartHalf(sensor1);
                 x2 = lengthFromStartHalf(sensor2);
-                t1 = t-1;
-                t2 = t+1;
+                t2 = t-1;
+                t1 = t+1;
                 
-                N(cell,t) = exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau))) + exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)));
-                sumNv(cell,t) = exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau)))*sensorCellSpeedArray(sensor1,t1) + exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)))*sensorCellSpeedArray(sensor2,t2);
-                estimatedSpeed(cell,t)=sumNv(cell,t)/N(cell,t);
+                Nfree = exp(-((abs(x-x1)/sigma)+((abs(t-t1)-(abs(x-x1)/cfree))/tau))) + exp(-((abs(x-x2)/sigma)+((abs(t-t2)-(abs(x-x2)/cfree))/tau)));
+                Ncong = exp(-((abs(x-x1)/sigma)+((abs(t-t1)-(abs(x-x1)/ccong))/tau))) + exp(-((abs(x-x2)/sigma)+((abs(t-t2)-(abs(x-x2)/ccong))/tau)));
+                sumNvfree = exp(-((abs(x-x1)/sigma)+((abs(t-t1)-(abs(x-x1)/cfree))/tau)))*sensorCellSpeedArray(sensor1,t1) + exp(-((abs(x-x2)/sigma)+((abs(t-t2)-(abs(x-x2)/cfree))/tau)))*sensorCellSpeedArray(sensor2,t2);
+                sumNvcong = exp(-((abs(x-x1)/sigma)+((abs(t-t1)-(abs(x-x1)/ccong))/tau)))*sensorCellSpeedArray(sensor1,t1) + exp(-((abs(x-x2)/sigma)+((abs(t-t2)-(abs(x-x2)/ccong))/tau)))*sensorCellSpeedArray(sensor2,t2);
+                Vfree = sumNvfree/Nfree;
+                Vcong = sumNvcong/Ncong;
+
+                Vstar = min(Vfree,Vcong);
+                
+%                 weight between the two speed fields 
+                weight = 0.5*(1+tanh((Vc-Vstar)/deltaV));
+
+                estimatedSpeed(cell,t)=weight*Vcong+(1-weight)*Vfree;
             end
         end
         

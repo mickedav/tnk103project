@@ -83,8 +83,8 @@ for day = 1:numberOfDays
         
         
         %% plot heat maps of stretch speeds and travel times
-                        figure(date)
-                        plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'date');
+        figure(date)
+        plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'date');
         
         %                 figure(date)
         %                 plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps,'date');
@@ -100,93 +100,27 @@ for day = 1:numberOfDays
     
 end
 
-%% algorithm 1 - only for radar sensors
-[sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algoritmSensorStepwiseFill(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
+%% algorithm 1 - radar sensors, only space fill
+[sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
 figure(1)
-plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'algorithm 1: only space fill');
+plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 1: Only space fill');
 %%
 
-%% algorithm 2
+%% algorithm 2 - radar sensors, spatiotemporal interpolation
 figure(2)
-estimatedSpeed = algorithmSpatiotempInterpol(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
-plotHeatMap(estimatedSpeed.*3.6,startTime, endTime, numberOfTimeSteps, 'algorithm 2: Spatiotemporal Interpolation');
-%% 
+estimatedSpeedAlg2 = algorithm2(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
+plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 2: Spatiotemporal Interpolation');
+%%
 
-%% algorithm 3
-% fill lengthFromStartHalf with the length from start to half of the cell
-% for each cell
-% fill lengthFromStartReal with the length from start to the end of the
-% cell for each cell
-
-% indexSensorArray consists of each sensor's cell number
-sensorCellSpeedArray(isnan(sensorCellSpeedArray)) = 0;
-indexSensorArray = find(sensorCellSpeedArray(:,1));
-
-lengthFromStartHalf(1) = cellSize(1)/2;
-lengthFromStartReal(1) = cellSize(1);
-for i=2:totalNumberOfCells
-    currentNumberOfCells = 0;
-    index = 0;
-    for j=1:numberOfLinks
-        currentNumberOfCells =  currentNumberOfCells + numberOfCells(j);
-        index = index + 1;
-        %         break if cell t is on link number index
-        if (i/currentNumberOfCells) <=1
-            lengthFromStartHalf(i) = lengthFromStartReal(end) + cellSize(index)./2;
-            lengthFromStartReal(i) = lengthFromStartReal(end) + cellSize(index);
-            break;
-        end
-    end
-end
-
-% fill lengthBetweenSensors with the distance (meters) between two sensors
-for i=2:(numberOfSensors-1)
-    distanceBetweenSensors(i-1) = lengthFromStartHalf(indexSensorArray(i))-lengthFromStartHalf(indexSensorArray(i-1));
-end
-
-% average distance between two sensors
-averageDistanceSensor = mean(distanceBetweenSensors);
+%% algorithm 3 - radar sensors, adaptive smoothing method
+figure(3)
+estimatedSpeedAlg3 = algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
+plotHeatMap(estimatedSpeedAlg3.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 3: Adaptive Smoothing Method');
 
 %%
-% sigma is calculated as half of the average distance between two sensors
-sigma = averageDistanceSensor/2;
-% tau is set to half of the aggregated interval (1 min)
-tau = 0.5;
-%%
-estimatedSpeed = sensorCellSpeedArray;
-for t=2:(numberOfTimeSteps-1)
-    
-    % loop through all the sensors
-    for i=2:(numberOfSensors-1)
-        sensor1 = indexSensorArray(i-1);
-        sensor2 = indexSensorArray(i);
-        
-        % if the two sensors are not in neighboring cells, no estimation will be
-        % done
-        if sensor1+1 ~= sensor2
-            
-            % for the first cell after the first sensor to the last cell before the
-            % next sensor, t.ex. cell 10-11
-            for cell=(sensor1+1):(sensor2-1)
-                
-                % loop for two sensors at the time
-                % x is the position in the middle on the cell we want to estimate the speed
-                % in
-                x = lengthFromStartHalf(cell);
-                x1 = lengthFromStartHalf(sensor1);
-                x2 = lengthFromStartHalf(sensor2);
-                t1 = t-1;
-                t2 = t+1;
-                
-                N(cell,t) = exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau))) + exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)));
-                sumNv(cell,t) = exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau)))*sensorCellSpeedArray(sensor1,t1) + exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)))*sensorCellSpeedArray(sensor2,t2);
-                estimatedSpeed(cell,t)=sumNv(cell,t)/N(cell,t);
-            end
-        end
-        
-    end
-end
-%% 
+
+
+
 
 %% difference between arrays
 %     sensorCellSpeedArrayDay(:,:,day);
