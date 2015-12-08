@@ -5,8 +5,6 @@ intervals = 1;
 h = 50*ones(NumOfIntervals, 10800);
 maxTT = 0;
 
-
-
 startTimeSec = 0;
 
 while intervals <= NumOfIntervals
