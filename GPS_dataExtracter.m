@@ -40,7 +40,7 @@ network = Network();
 dbr = DatabaseReader();
 analyst = util.NetworkAnalysis(network);
 
-nbrDays = 2;
+nbrDays = 1;
 start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59);
 end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
 [GpsSpeedData, speedDataAggregated, cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);

@@ -1,10 +1,10 @@
 function [hej,travelTimesArray] = travelTimesInterval(temp, start_time, NumOfIntervals, steplength, cellSizeAll,numberOfTimeSteps)
 
-steplength = 60;
+steplength = 5;
 start_time = 1;
 numberOfSeconds = numberOfTimeSteps*60;
 NumOfIntervals = numberOfTimeSteps/steplength;
-% NumOfIntervals = 10;
+%NumOfIntervals = 10;
 
 intervals = 1;
 %travelTime(NumOfIntervals);
@@ -22,7 +22,8 @@ while intervals <= NumOfIntervals
     end
     
     travelTime = trajectory(temp, cellSizeAll, start_time);
-    
+    l = size(travelTime,2)
+    travelTime
     if size(travelTime,2) + startTimeSec > maxTT
         maxTT = size(travelTime,2) + startTimeSec;
         
