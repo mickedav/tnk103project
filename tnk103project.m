@@ -46,7 +46,12 @@ network = Network();
 %% Declare which sensors and links that are to be used and the selected start and end time.
 sensorIdArray = [244 243 239 238 236 235 231 230 229 227 226 225 224 223 222 221];
 linkIdArray = [11269 14136 6189 8568 15256 9150 38698 9160 71687 9198];
-
+% NumOfIntervals = 10;
+% stepLength is what interval the vehicles are to be simulated thorugh the
+% stretch, in minutes
+steplength = 5;
+% the preferred time step (in minutes) between the ticks on the x-axis
+% timeStep = 30;
 %%
 
 numberOfLinks = size(linkIdArray,2);
@@ -112,10 +117,20 @@ end
 % %% algorithm 2 - radar sensors, spatiotemporal interpolation
 % h=figure(2)
 estimatedSpeedAlg2 = algorithm2(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
-[travelTimesArray]=plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps,cellSizeAll, 'Algorithm 2: Spatiotemporal Interpolation');
+% plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps,cellSizeAll, 'Algorithm 2: Spatiotemporal Interpolation');
 % print(h,'-dpng','H:\TNK103\plots\algorithm2For7mars.png')
 % %%
-travelTimesArray'
+
+% hej is an "array with trajectories" and travelTimesArray is the travel
+% time for the stretch between cell 9-50.
+[hej,travelTimesArray] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps);
+
+figure(3)
+plot(hej')
+% plot the travelTimes at different start times
+figure(4)
+plotTravelTimesDifferentStartTimes(travelTimesArray,startTime,endTime, steplength);
+% travelTimesArray'
 
 %% algorithm 3 - radar sensors, adaptive smoothing method
 % h=figure(3)

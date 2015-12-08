@@ -1,5 +1,5 @@
 
-function [travelTimesArray] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString,cellSizeAll)
+function [] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString,cellSizeAll)
 % to use this function, the array temp needs to be an array of size[rows=numberOfcells, columns=numberOfTimesteps]
 h=figure(3)
 % replace all NaN:s with zeros in order to get a nice plot with the same
