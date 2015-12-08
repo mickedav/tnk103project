@@ -1,7 +1,7 @@
 
-function [] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString)
+function [travelTimesArray] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString,cellSizeAll)
 % to use this function, the array temp needs to be an array of size[rows=numberOfcells, columns=numberOfTimesteps]
-
+h=figure(3)
 % replace all NaN:s with zeros in order to get a nice plot with the same
 % colors on the colorbar
 temp(isnan(temp)) = 0;
@@ -57,7 +57,6 @@ set(gca,'YTick',[1:5:50])
 set(gca,'YTickLabel',yDataNum)
 % set(gca,'XTickLabel',xDataStr)
 
-
 formatOut = 'yyyy-mm-dd';
 
 if strcmp(titleString,'date')
@@ -71,5 +70,17 @@ xlabel('time')
 ylabel('cell ID')
 ylabel(c,'km/h')
 % set(c, 'ylim', [0 100])
+
+%   hold on
+% numberOfTimeSteps/timeStep + 1;
+
+% var 5:e minut
+steplength = 5;
+start_time = 1;
+NumOfIntervals = numberOfTimeSteps/steplength
+
+[hej,travelTimesArray] = travelTimesInterval(temp.*3.6, start_time, NumOfIntervals, steplength, cellSizeAll,numberOfTimeSteps);
+plot(hej')
+
 
 end

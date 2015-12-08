@@ -72,7 +72,7 @@ for day = 1:numberOfDays
         %%
         
         %% get cell attributes
-        [numberOfCells, cellSize, lengthStretch, totalNumberOfCells] = getCellMap(network, linkIdArray);
+        [numberOfCells, cellSize, lengthStretch, totalNumberOfCells, cellSizeAll] = getCellMap(network, linkIdArray);
         %%
         
         %% create the
@@ -102,27 +102,38 @@ for day = 1:numberOfDays
     
 end
 
-%% algorithm 1 - radar sensors, only space fill
-[sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
-h=figure(1)
-plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 1: Only space fill');
-print(h,'-dpng','H:\TNK103\plots\algorithm1For7mars.png')
-%%
-
-%% algorithm 2 - radar sensors, spatiotemporal interpolation
-h=figure(2)
+% %% algorithm 1 - radar sensors, only space fill
+% [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
+% h=figure(1)
+% plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 1: Only space fill');
+% print(h,'-dpng','H:\TNK103\plots\algorithm1For7mars.png')
+% %%
+% 
+% %% algorithm 2 - radar sensors, spatiotemporal interpolation
+% h=figure(2)
 estimatedSpeedAlg2 = algorithm2(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
-plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 2: Spatiotemporal Interpolation');
-print(h,'-dpng','H:\TNK103\plots\algorithm2For7mars.png')
-%%
+[travelTimesArray]=plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps,cellSizeAll, 'Algorithm 2: Spatiotemporal Interpolation');
+% print(h,'-dpng','H:\TNK103\plots\algorithm2For7mars.png')
+% %%
+travelTimesArray'
 
 %% algorithm 3 - radar sensors, adaptive smoothing method
-h=figure(3)
-estimatedSpeedAlg3 = algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
-plotHeatMap(estimatedSpeedAlg3.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 3: Adaptive Smoothing Method');
-print(h,'-dpng','H:\TNK103\plots\algorithm3For7mars.png')
+% h=figure(3)
+% estimatedSpeedAlg3 = algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
+% plotHeatMap(estimatedSpeedAlg3.*3.6,startTime, endTime, numberOfTimeSteps,cellSizeAll, 'Algorithm 3: Adaptive Smoothing Method');
+% print(h,'-dpng','H:\TNK103\plots\algorithm3For7mars.png')
 %%
+% hold on
+% NumOfIntervals = 10;
+% % var 5:e minut
+% steplength = 5;
+% start_time = 1;
+% hej = travelTimesInterval(estimatedSpeedAlg3.*3.6, start_time, NumOfIntervals, steplength, cellSizeAll)
+% plot(hej)
 
+% plot(hej')
+
+% hej = travelTimesInterval(estimatedSpeedAlg2, 1, NumOfIntervals, steplength, cellSizeAll);
 
 
 
@@ -171,7 +182,6 @@ print(h,'-dpng','H:\TNK103\plots\algorithm3For7mars.png')
 %      c(cellWithSensor,1)=sensorDataArray(1,1);
 %      cellSpeed{index}=c;
 %%
-
 
 
 
