@@ -12,7 +12,7 @@ sensorArray = sensorArray(2:end);
 % sensorIdArray is the predefined sensors' ID from the network 50.
 % indexArray consists of the index of the sensors in sensorArray
 sensorOffset = 0;
-indexArray = 0;
+indexArray=0;
 for m = sensorIdArray
     index = find(sensorArray == m);
     sensorOffset(end+1) = sensor(index).offset;

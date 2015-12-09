@@ -1,5 +1,5 @@
 
-function [] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString)
+function [] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString,cellSizeAll)
 % to use this function, the array temp needs to be an array of size[rows=numberOfcells, columns=numberOfTimesteps]
 h=figure(3)
 % replace all NaN:s with zeros in order to get a nice plot with the same
@@ -75,12 +75,12 @@ ylabel(c,'km/h')
 % numberOfTimeSteps/timeStep + 1;
 
 % var 5:e minut
-% steplength = 5;
-% start_time = 1;
-% NumOfIntervals = numberOfTimeSteps/steplength
-% 
-% [hej,travelTimesArray] = travelTimesInterval(temp.*3.6, start_time, NumOfIntervals, steplength, cellSizeAll,numberOfTimeSteps);
-% plot(hej')
+steplength = 5;
+start_time = 1;
+NumOfIntervals = numberOfTimeSteps/steplength
+
+[hej,travelTimesArray] = travelTimesInterval(temp.*3.6, start_time, NumOfIntervals, steplength, cellSizeAll,numberOfTimeSteps);
+plot(hej')
 
 
 end
