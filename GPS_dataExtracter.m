@@ -45,8 +45,6 @@ start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59);
 end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
 [GpsSpeedData, speedDataAggregated, cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
 
-
-
 %should be set somewhere else, used in many functions
 endSec = 10860;
 cellSpeedAggregatedTime = aggregateTime(speedDataAggregated, endSec, cellSizeAll);
@@ -61,6 +59,12 @@ travelTime = trajectory(cellSpeedAggregatedTime, cellSizeAll, start_time);
     %figure(i)
     plotHeatMap(cellSpeedAggregatedTime, start_TimeStamp, end_TimeStamp, length(cellSpeedAggregatedTime), 'hej');
 %end
+
+
+%%Algorithm 4
+(cellSpeedAggregatedTime)
+
+%%
 
 % 
 % hgload('figurTest.fig');
