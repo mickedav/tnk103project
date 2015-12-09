@@ -174,28 +174,30 @@ GPSCellSpeedArray(isnan(GPSCellSpeedArray)) = 0;
 
 % Loop through all timesteps
 for t=2:(numberOfTimeSteps-1)
+    t
     % (numberOfTimeSteps-1)
-    y1 = 1; y2 = 1;
+   
     % Loop through all cells from cell 9
-    for cell=firstCell:totalNumberOfCells
-        
+    for cell=firstCell:(totalNumberOfCells-1)
+         
         if isnan(cellSpeedAggregatedTime(cell,t))
-            
+%             y1 = 1; y2 = 1;
+noMeasure1 = 1; noMeasure2 = 1; tooLong1 = 1; tooLong2 = 1; 
             % x is the position in the middle on the cell we want to estimate the speed
             % in
             x = lengthFromStartHalf(cell);
             t1 = t+1;
             t2 = t-1;
             
-            %             loop for finding x1
+            % loop for finding x1
             for i=(cell-1):-1:1
                 
                 if GPSCellSpeedArray(i,t1)== 0 && isnan(cellSpeedAggregatedTime(i,t1))
                     %  if there are no measurement in the cell -> do not use
                     %  any value
-                    %                     GPSCellSpeedArray(i,t1)=0;
+                    %  GPSCellSpeedArray(i,t1)=0;
                     x1 = 0;
-                    y1 = 0;
+                    noMeasure1 = 0;
                     cellGPS1 = i;
                     
                 else
@@ -209,8 +211,8 @@ for t=2:(numberOfTimeSteps-1)
                     if abs(x-x1) > 1000
                         % if the distance between the data points is
                         % larger than 1 km -> do not use any value
-                        %                         GPSCellSpeedArray(i,t1)=0;
-                        y1 = 0;
+                        % GPSCellSpeedArray(i,t1)=0;
+                        tooLong1 = 0;
                     end
                     
                     break;
@@ -220,7 +222,7 @@ for t=2:(numberOfTimeSteps-1)
             end
             
             
-            %             loop for finding x2
+            % loop for finding x2
             for i=(cell+1):totalNumberOfCells
                 
                 if GPSCellSpeedArray(i,t2)== 0 && isnan(cellSpeedAggregatedTime(i,t2))
@@ -228,7 +230,7 @@ for t=2:(numberOfTimeSteps-1)
                     %  any value
                     %                     GPSCellSpeedArray(i,t2)=0;
                     x2 = 0;
-                    y2 = 0;
+                    noMeasure2 = 0;
                     cellGPS2 = i;
                     
                 else
@@ -244,7 +246,7 @@ for t=2:(numberOfTimeSteps-1)
                         % if the distance between the data points is
                         % larger than 1 km -> do not use any value
                         %                          GPSCellSpeedArray(i,t2)=0;
-                        y2 = 0;
+                        tooLong2 = 0;
                     end
                     
                     break;
@@ -255,20 +257,30 @@ for t=2:(numberOfTimeSteps-1)
             
             % sigma is calculated as half of the distance between the two data points
             % are used to estimate the speed in the cell
-            if x1 == 0
+            if noMeasure1 == 0 || tooLong1 == 0
                 sigma = abs(x-x2)/2;
-                y1 = 0;
-            elseif x2  == 0
+%                 y1 = 0;
+            elseif  noMeasure2 == 0 || tooLong2 == 0
                 sigma = abs(x-x1)/2;
-                y2 = 0;
+%                 y2 = 0;
             else
                 sigma = abs(x1-x2)/2;
             end
             
-            %             if
-            if y1==0 && y2 ==0
-               GPSCellSpeedArray(cell,t)=GPSCellSpeedArray(cell-1,t);
+            % if the measurements are too far away (> 1 km) or no
+            % measurements in the neigboring time periods -> set the speed
+            % to the closest measurement/estimated speed in the same time
+            % period
+            if (noMeasure1 == 0 || tooLong1 ==0) && (noMeasure2 == 0 || tooLong2 == 0)
+                if noMeasure1 == 0 
+               GPSCellSpeedArray(cell,t)=GPSCellSpeedArray(cell+1,t);
+                elseif noMeasure2 == 0 
+                        GPSCellSpeedArray(cell,t)=GPSCellSpeedArray(cell-1,t);
+                end
             else
+                
+                y1 = noMeasure1*tooLong1;
+                y2 = noMeasure2*tooLong2;
                 
                 N = y1*exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau))) + y2*exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)));
                 sumNv = y1*exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau)))*GPSCellSpeedArray(cellGPS1,t1) + y2*exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)))*GPSCellSpeedArray(cellGPS2,t2);

@@ -20,7 +20,7 @@ endMinute = end_TimeStamp.getMinute;
 
 %Create Time intervall
 for day = 1:nbrDays
-    
+   % tick = Time();
     startTimeStampString = char(start_TimeStamp.toString);
     startTimeStampString = ['''' startTimeStampString ''''];
     endTimeStampString = char(end_TimeStamp.toString);
@@ -70,6 +70,9 @@ for day = 1:nbrDays
     catch
         'Cant retrieve number of rows'
     end
+    
+    %tock = Time();
+    %fprintf('Query made, took %d seconds',tock.secondsSince(tick));
     %% Get column names in order to fetch data
     wantedDataInt = [String('startlid'), String('endlid'), String('traveltime')];
     wantedDataDouble = [String('start_offset'), String('end_offset')];
@@ -87,6 +90,7 @@ for day = 1:nbrDays
     row = 1;
     
     %% Loop through the DB answer and store data in MATLAB arrays
+    tick = Time();
     while dbr.psRSNext('test');
         
         for i = 1:size(wantedDataInt)
@@ -107,10 +111,18 @@ for day = 1:nbrDays
             timeStampData(row,i) = round(time_stamp_temp.get_time_interval_duration);
         end
         row = row + 1;
+        
+   %     tock = Time();
+   %     fprintf('Fetched taxi row %i, took %d seconds',row-1,tock.secondsSince(tick));
     end
+    tock = Time();
+    fprintf('Fetched taxi row, took %d seconds',tock.secondsSince(tick));
     row = row - 1;
     
+    tick = Time();
     [speedDataAggregatedTime, speedData(day,:,:), endSec, totalNumberOfCells, cellSizeAll] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
+    tock = Time();
+    fprintf('setCellSpeedDay, took %d seconds',row-1,tock.secondsSince(tick));
     dbr.psDestroy('test');
     dbr.psDestroy('test2');
     start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,startDay +(day)*7,startHour, startMinute,59,59);
