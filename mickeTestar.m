@@ -26,8 +26,8 @@ NETWORKID = 50;
 CONFIGURATIONID = 15001;
 linkIdArray = [11269 14136 6189 8568 15256 9150 38698 9160 71687 9198];
 
-start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59);
-end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
+start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,6,30,59,59);
+end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,9,30,0,0);
 
 
 startDay = start_TimeStamp.getDayOfMonth;
@@ -66,7 +66,14 @@ network = Network();
 dbr = DatabaseReader();
 analyst = util.NetworkAnalysis(network);
 
+try
 query = String(query);
 dbr.psCreate(String('test'),query);
 dbr.psQuery(String('test'));
+catch e
+disp('hej')   
+end
+
+testing = output.TravelTimeOutput.getBluetoothTravelTimeOutput(network, 195, start_TimeStamp, end_TimeStamp, 5)
+
 
