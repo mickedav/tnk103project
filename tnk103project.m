@@ -8,7 +8,7 @@ close all
 %
 %
 % % Adding a path to the top folder.
-%     addpath(genpath('H:\TNK103\'),'-end');
+%       addpath(genpath('H:\TNK103\'),'-end');
 % %
 import core.*               %Core classes
 
@@ -52,16 +52,13 @@ linkIdArray = [11269 14136 6189 8568 15256 9150 38698 9160 71687 9198];
 steplength = 5;
 % the preferred time step (in minutes) between the ticks on the x-axis
 % timeStep = 30;
-
-% the stretch will start from cell number 9
-firstCell = 9;
 %%
 
 numberOfLinks = size(linkIdArray,2);
 
 % 2013 mars: monday=4,11,18 tuesday=
 
-firstDay = 21;
+firstDay = 7;
 numberOfDays = 1;
 numberOfWeeks = 1;
 
@@ -70,7 +67,7 @@ for day = 1:numberOfDays
     for week = 1:numberOfWeeks
         
         date = firstDay-1+day+(week-1)*7;
-        % date = 21;
+        %     date = 21;
         startTime = Time.newTimeFromBerkeleyDateTime(2013,03,date,6,30,59,59);
         endTime = Time.newTimeFromBerkeleyDateTime(2013,03,date,9,30,0,0);
         
@@ -83,7 +80,7 @@ for day = 1:numberOfDays
         [numberOfCells, cellSize, lengthStretch, totalNumberOfCells, cellSizeAll] = getCellMap(network, linkIdArray);
         %%
         
-        %% create the speed and travel time for each cell, based on the sensor data for that specific cell
+        %% create the
         [sensorCellSpeedArray, sensorCellTravelTimesArray,indexArray]=setCellDataSensor(numberOfCells,network,sensorIdArray,totalNumberOfCells,numberOfTimeSteps,numberOfSensors,linkIdArray,cellSize,sensorSpeedArray);
         %%
         % spara för varje vecka
@@ -91,21 +88,21 @@ for day = 1:numberOfDays
         
         
         %% plot heat maps of stretch speeds and travel times
-        %         h=figure(date);
-        %         plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'date');
-        
-        %         filename1 = sprintf('H:\\TNK103\\plots\\%d', date)
-        %         print(h,'-dpng',filename1)
-        %         figure(date)
-        %         plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps,'date');
+%         h=figure(date);
+%         plotHeatMap(sensorCellSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'date');
+                               
+%         filename1 = sprintf('H:\\TNK103\\plots\\%d', date)
+%         print(h,'-dpng',filename1)
+        %                 figure(date)
+        %                 plotHeatMap(sensorCellTravelTimesArray,startTime, endTime, numberOfTimeSteps,'date');
         %%
     end
     
     %%      calculate mean of e.g. Thursdays
     sensorCellMeanSpeedArray = nanmean(sensorCellSpeedArrayWeek,3);
-    %          h=figure(1)
-    %          plotHeatMap(sensorCellMeanSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'Thursdays');
-    %          print(h,'-dpng','H:\TNK103\plots\thursdayMean.png')
+%          h=figure(1)
+%          plotHeatMap(sensorCellMeanSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'Thursdays');
+%          print(h,'-dpng','H:\TNK103\plots\thursdayMean.png')
     %%
     
 end
@@ -116,7 +113,7 @@ end
 % plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 1: Only space fill');
 % print(h,'-dpng','H:\TNK103\plots\algorithm1For7mars.png')
 % %%
-%
+% 
 % %% algorithm 2 - radar sensors, spatiotemporal interpolation
 % h=figure(2)
 estimatedSpeedAlg2 = algorithm2(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
@@ -126,38 +123,8 @@ estimatedSpeedAlg2 = algorithm2(sensorCellSpeedArray,cellSize,numberOfTimeSteps,
 
 % hej is an "array with trajectories" and travelTimesArray is the travel
 % time for the stretch between cell 9-50.
-% [hej,travelTimesArray] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps);
-%
-% %%
-% figure(3)
-% plot(hej')
-% %%
-%
-% %%
-% % plot the travelTimes at different start times
-% figure(4)
-% plotTravelTimesDifferentStartTimes(travelTimesArray,startTime,endTime, steplength);
-% %%
+[hej,travelTimesArray] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps);
 
-%% Algorithm 4 - for GPS data
-load('cellSpeedAggregatedTime')
-
-lengthFromStartHalf(1) = cellSize(1)/2;
-lengthFromStartReal(1) = cellSize(1);
-for i=2:totalNumberOfCells
-    currentNumberOfCells = 0;
-    index = 0;
-    for j=1:numberOfLinks
-        currentNumberOfCells =  currentNumberOfCells + numberOfCells(j);
-        index = index + 1;
-        %         break if cell t is on link number index
-        if (i/currentNumberOfCells) <=1
-            lengthFromStartHalf(i) = lengthFromStartReal(end) + cellSize(index)./2;
-            lengthFromStartReal(i) = lengthFromStartReal(end) + cellSize(index);
-            break;
-        end
-    end
-end
 
 
 %%
@@ -305,10 +272,18 @@ end
 
 %%
 
+figure(3)
+plot(hej')
+% plot the travelTimes at different start times
+figure(4)
+plotTravelTimesDifferentStartTimes(travelTimesArray,startTime,endTime, steplength);
+% travelTimesArray'
+
+
 %% algorithm 3 - radar sensors, adaptive smoothing method
 % h=figure(3)
 % estimatedSpeedAlg3 = algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
-% plotHeatMap(estimatedSpeedAlg3.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 3: Adaptive Smoothing Method');
+% plotHeatMap(estimatedSpeedAlg3.*3.6,startTime, endTime, numberOfTimeSteps,cellSizeAll, 'Algorithm 3: Adaptive Smoothing Method');
 % print(h,'-dpng','H:\TNK103\plots\algorithm3For7mars.png')
 %%
 % hold on
@@ -370,8 +345,3 @@ end
 %      c(cellWithSensor,1)=sensorDataArray(1,1);
 %      cellSpeed{index}=c;
 %%
-
-
-
-
-
