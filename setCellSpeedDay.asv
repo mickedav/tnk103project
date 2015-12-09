@@ -15,7 +15,7 @@ endSec = 10860;
 cellSpeedTemp = cell(totalNumberOfCells,endSec);
 positions = [];
 for i = 1:row
-    %tick = Time();
+    tick = Time();
     % Create array were speeds for each time step is stored
     %A = NaN(1,endSec);
     

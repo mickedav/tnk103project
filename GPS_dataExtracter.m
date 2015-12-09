@@ -4,8 +4,9 @@
 %% Setup
 
 % Adding a path to the top folder.
-%addpath(genpath('H:\TNK103\KOD'),'-end');
-clear all
+addpath(genpath('../'),'-end');
+%clear all
+
 import core.*               %Core classes
 
 % Setting the enviroment (i.e loading all jar files)
@@ -25,7 +26,7 @@ import util.*
 import bAE.*                %Output data classes not needed in this example
 %import highwayflowmodel.*  %Flow model classes not needed in this example
 %import highway.*           %Highway classes not needed in this example
-
+tick = Time();
 % Setting the network id and configuration id.
 NETWORKID = 50;
 CONFIGURATIONID = 15001;
@@ -41,15 +42,18 @@ dbr = DatabaseReader();
 analyst = util.NetworkAnalysis(network);
 
 nbrDays = 1;
-start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,6,30,59,59);
-end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,4,9,30,0,0);
+start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,6,30,59,59);
+end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,9,30,0,0);
+
 [GpsSpeedData, speedDataAggregated, cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
 
 
 
 %should be set somewhere else, used in many functions
 endSec = 10860;
+
 cellSpeedAggregatedTime = aggregateTime(speedDataAggregated, endSec, cellSizeAll);
+
 start_time = 1;
 travelTime = trajectory(cellSpeedAggregatedTime, cellSizeAll, start_time);
 
@@ -59,9 +63,10 @@ travelTime = trajectory(cellSpeedAggregatedTime, cellSizeAll, start_time);
 %for i = 1:nbrDays
    % GpsSpeedDataDay = squeeze(GpsSpeedData(i,:,:));
     %figure(i)
-    plotHeatMap(cellSpeedAggregatedTime, start_TimeStamp, end_TimeStamp, length(cellSpeedAggregatedTime), 'hej');
+    plotHeatMap(cellSpeedAggregatedTime, start_TimeStamp, end_TimeStamp, length(cellSpeedAggregatedTime), 'hej', cellSizeAll);
 %end
-
+tock = Time();
+tock.secondsSince(tick);
 % 
 % hgload('figurTest.fig');
 % myhandle = findall(gcf,'type','image');
