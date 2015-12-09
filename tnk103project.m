@@ -52,13 +52,14 @@ linkIdArray = [11269 14136 6189 8568 15256 9150 38698 9160 71687 9198];
 steplength = 5;
 % the preferred time step (in minutes) between the ticks on the x-axis
 % timeStep = 30;
+firstCell = 9;
 %%
 
 numberOfLinks = size(linkIdArray,2);
 
 % 2013 mars: monday=4,11,18 tuesday=
 
-firstDay = 7;
+firstDay = 21;
 numberOfDays = 1;
 numberOfWeeks = 1;
 
@@ -107,184 +108,55 @@ for day = 1:numberOfDays
     
 end
 
-% %% algorithm 1 - radar sensors, only space fill
-% [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
-% h=figure(1)
-% plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 1: Only space fill');
-% print(h,'-dpng','H:\TNK103\plots\algorithm1For7mars.png')
-% %%
-% 
-% %% algorithm 2 - radar sensors, spatiotemporal interpolation
-% h=figure(2)
+%% algorithm 1 - radar sensors, only space fill
+[sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize);
+h=figure(1);
+plotHeatMap(sensorAllCellsSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 1: Only space fill');
+print(h,'-dpng','H:\TNK103\plots\algorithm1For7mars.png')
+%%
+
+%% algorithm 2 - radar sensors, spatiotemporal interpolation
+h=figure(2)
 estimatedSpeedAlg2 = algorithm2(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
-% plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps,cellSizeAll, 'Algorithm 2: Spatiotemporal Interpolation');
-% print(h,'-dpng','H:\TNK103\plots\algorithm2For7mars.png')
-% %%
+plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 2: Spatiotemporal Interpolation');
+print(h,'-dpng','H:\TNK103\plots\algorithm2For7mars.png')
+%%
 
 % hej is an "array with trajectories" and travelTimesArray is the travel
 % time for the stretch between cell 9-50.
-[hej,travelTimesArray] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps);
+% [hej,travelTimesArray] = travelTimesInterval(estimatedSpeedAlg2, steplength, numberOfTimeSteps);
 
 
 
-%%
-% % sigma is calculated as half of the average distance between two sensors
-% sigma = averageDistanceSensor/2;
-% tau is set to half of the aggregated interval (1 min)
-tau = 0.5;
-%%
-
-% cellSpeedAggregatedTime contains NaN-values and GPSCellSpeedArray
-% contains zeros instead of NaN
-GPSCellSpeedArray = cellSpeedAggregatedTime;
-GPSCellSpeedArray(isnan(GPSCellSpeedArray)) = 0;
-
-% Loop through all timesteps
-for t=2:(numberOfTimeSteps-1)
-    t
-    % (numberOfTimeSteps-1)
-   
-    % Loop through all cells from cell 9
-    for cell=firstCell:(totalNumberOfCells-1)
-         
-        if isnan(cellSpeedAggregatedTime(cell,t))
-%             y1 = 1; y2 = 1;
-noMeasure1 = 1; noMeasure2 = 1; tooLong1 = 1; tooLong2 = 1; 
-            % x is the position in the middle on the cell we want to estimate the speed
-            % in
-            x = lengthFromStartHalf(cell);
-            t1 = t+1;
-            t2 = t-1;
-            
-            % loop for finding x1
-            for i=(cell-1):-1:1
-                
-                if GPSCellSpeedArray(i,t1)== 0 && isnan(cellSpeedAggregatedTime(i,t1))
-                    %  if there are no measurement in the cell -> do not use
-                    %  any value
-                    %  GPSCellSpeedArray(i,t1)=0;
-                    x1 = 0;
-                    noMeasure1 = 0;
-                    cellGPS1 = i;
-                    
-                else
-                    %   if there is a measured or estimated speed that is greater than zero ->
-                    %   use this value
-                    % x1 is the distance to the closest prevois data point
-                    % cellGPS1 is the cell number where the closest prevois data point is
-                    % located
-                    x1 = lengthFromStartHalf(i);
-                    cellGPS1 = i;
-                    if abs(x-x1) > 1000
-                        % if the distance between the data points is
-                        % larger than 1 km -> do not use any value
-                        % GPSCellSpeedArray(i,t1)=0;
-                        tooLong1 = 0;
-                    end
-                    
-                    break;
-                    
-                end
-                
-            end
-            
-            
-            % loop for finding x2
-            for i=(cell+1):totalNumberOfCells
-                
-                if GPSCellSpeedArray(i,t2)== 0 && isnan(cellSpeedAggregatedTime(i,t2))
-                    %  if there are no measurement in the cell -> do not use
-                    %  any value
-                    %                     GPSCellSpeedArray(i,t2)=0;
-                    x2 = 0;
-                    noMeasure2 = 0;
-                    cellGPS2 = i;
-                    
-                else
-                    %   if there is a measured or estimated speed that is greater than zero ->
-                    %   use this value
-                    % x2 is the distance to the closest prevois data point
-                    % cellGPS2 is the cell number where the closest prevois data point is
-                    % located
-                    x2 = lengthFromStartHalf(i);
-                    cellGPS2 = i;
-                    
-                    if abs(x-x2) > 1000
-                        % if the distance between the data points is
-                        % larger than 1 km -> do not use any value
-                        %                          GPSCellSpeedArray(i,t2)=0;
-                        tooLong2 = 0;
-                    end
-                    
-                    break;
-                    
-                end
-                
-            end
-            
-            % sigma is calculated as half of the distance between the two data points
-            % are used to estimate the speed in the cell
-            if noMeasure1 == 0 || tooLong1 == 0
-                sigma = abs(x-x2)/2;
-%                 y1 = 0;
-            elseif  noMeasure2 == 0 || tooLong2 == 0
-                sigma = abs(x-x1)/2;
-%                 y2 = 0;
-            else
-                sigma = abs(x1-x2)/2;
-            end
-            
-            % if the measurements are too far away (> 1 km) or no
-            % measurements in the neigboring time periods -> set the speed
-            % to the closest measurement/estimated speed in the same time
-            % period
-            if (noMeasure1 == 0 || tooLong1 ==0) && (noMeasure2 == 0 || tooLong2 == 0)
-                if noMeasure1 == 0 
-               GPSCellSpeedArray(cell,t)=GPSCellSpeedArray(cell+1,t);
-                elseif noMeasure2 == 0 
-                        GPSCellSpeedArray(cell,t)=GPSCellSpeedArray(cell-1,t);
-                end
-            else
-                
-                y1 = noMeasure1*tooLong1;
-                y2 = noMeasure2*tooLong2;
-                
-                N = y1*exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau))) + y2*exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)));
-                sumNv = y1*exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau)))*GPSCellSpeedArray(cellGPS1,t1) + y2*exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)))*GPSCellSpeedArray(cellGPS2,t2);
-                GPSCellSpeedArray(cell,t)=sumNv/N;
-            end
-            
-            
-            %           % loop for two sensors at the time
-            
-            %                 x1 = lengthFromStartHalf(sensor1);
-            %                 x2 = lengthFromStartHalf(sensor2);
-            %                 t2 = t-1;
-            %                 t1 = t+1;
-            
-        end
-        
-        
-    end
-    
-end
- plotHeatMap(GPSCellSpeedArray,startTime, endTime, numberOfTimeSteps, 'Algorithm 4: GPS data only');
-
-%%
-
+%% Algorithm 4 - for GPS data to use in data fusion
+load('cellSpeedAggregatedTime')
+GPSCellSpeedArray4 = algorithm4(cellSpeedAggregatedTime,cellSize,totalNumberOfCells,numberOfLinks,numberOfTimeSteps,numberOfCells,firstCell);
 figure(3)
-plot(hej')
-% plot the travelTimes at different start times
+plotHeatMap(GPSCellSpeedArray4,startTime, endTime, numberOfTimeSteps, 'Algorithm 4: GPS data');
+
+%%
+
+%% Algorithm 5 - for GPS data to use in data fusion
+load('cellSpeedAggregatedTime')
+GPSCellSpeedArray5 = algorithm5(cellSpeedAggregatedTime,cellSize,totalNumberOfCells,numberOfLinks,numberOfTimeSteps,numberOfCells,firstCell);
 figure(4)
-plotTravelTimesDifferentStartTimes(travelTimesArray,startTime,endTime, steplength);
-% travelTimesArray'
+plotHeatMap(GPSCellSpeedArray5,startTime, endTime, numberOfTimeSteps, 'Algorithm 5: GPS data for travel times');
+
+%%
+
+% figure(3)
+% plot(hej')
+% % plot the travelTimes at different start times
+% figure(4)
+% plotTravelTimesDifferentStartTimes(travelTimesArray,startTime,endTime, steplength);
+% % travelTimesArray'
 
 
 %% algorithm 3 - radar sensors, adaptive smoothing method
-% h=figure(3)
-% estimatedSpeedAlg3 = algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
-% plotHeatMap(estimatedSpeedAlg3.*3.6,startTime, endTime, numberOfTimeSteps,cellSizeAll, 'Algorithm 3: Adaptive Smoothing Method');
-% print(h,'-dpng','H:\TNK103\plots\algorithm3For7mars.png')
+h=figure(5)
+estimatedSpeedAlg3 = algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
+plotHeatMap(estimatedSpeedAlg3.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 3: Adaptive Smoothing Method');
+print(h,'-dpng','H:\TNK103\plots\algorithm3For7mars.png')
 %%
 % hold on
 % NumOfIntervals = 10;

@@ -1,10 +1,10 @@
-
-function [] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString,cellSizeAll)
+function [temp] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleString)
 % to use this function, the array temp needs to be an array of size[rows=numberOfcells, columns=numberOfTimesteps]
-h=figure(3)
+
 % replace all NaN:s with zeros in order to get a nice plot with the same
 % colors on the colorbar
 temp(isnan(temp)) = 0;
+
 
 % switch rows in order to plot with vehicles enter from south
 switchArray = temp;
@@ -40,9 +40,9 @@ for i=1:(ticks)
 end
 
 % load the saved color map from mycmap.mat and plot temp
-load('mycmap','cm')
+load('mycolor','color')
 imagesc(temp);
-colormap(cm);
+colormap(color);
 c=colorbar;
 
 % set the tick labels on the x-axis
@@ -69,18 +69,18 @@ title(startTimestr)
 xlabel('time')
 ylabel('cell ID')
 ylabel(c,'km/h')
-% set(c, 'ylim', [0 100])
+ set(c, 'ylim', [0 110])
 
 %   hold on
 % numberOfTimeSteps/timeStep + 1;
 
 % var 5:e minut
-steplength = 5;
-start_time = 1;
-NumOfIntervals = numberOfTimeSteps/steplength
-
-[hej,travelTimesArray] = travelTimesInterval(temp.*3.6, start_time, NumOfIntervals, steplength, cellSizeAll,numberOfTimeSteps);
-plot(hej')
+% steplength = 5;
+% start_time = 1;
+% NumOfIntervals = numberOfTimeSteps/steplength
+% 
+% [hej,travelTimesArray] = travelTimesInterval(temp.*3.6, start_time, NumOfIntervals, steplength, cellSizeAll,numberOfTimeSteps);
+% plot(hej')
 
 
 end
