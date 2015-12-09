@@ -20,6 +20,8 @@ catch
     setEnviroment
 end
 
+%Här är det
+
 % Importing all java classes that will be used.
 import java.lang.*          %String classes
 import java.util.*          %Wrapper classes
