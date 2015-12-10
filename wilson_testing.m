@@ -109,17 +109,18 @@ end
 %% algorithm 2 - radar sensors, spatiotemporal interpolation
 figure(2)
 estimatedSpeedAlg2 = algorithm2(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
-plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 2: Spatiotemporal Interpolation', cellSizeAll);
+plotHeatMap(estimatedSpeedAlg2.*3.6,startTime, endTime, numberOfTimeSteps, 'Algorithm 2: Spatiotemporal Interpolation');
 %%
 %travelTime = trajectory(estimatedSpeed, cellSizeAll, startTime);
 NumOfIntervals = 10;
 steplength = 5;
-hej = travelTimesInterval(estimatedSpeedAlg2, 1, NumOfIntervals, steplength, cellSizeAll, numberOfTimeSteps);
+hej = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps);
 
-x = 1:size(hej, 2);
-
-hej1 = polyfit(x,hej(1,:),2);
+[tt, cells] = getTTFromBluetooth(195, network, starTime, endTime);
 
 figure(3)
 plot(hej')
 
+%Mickes lekstuga
+x = 1:size(hej, 2);
+hej1 = polyfit(x,hej(1,:),2);

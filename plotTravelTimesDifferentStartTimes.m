@@ -1,5 +1,6 @@
 function []  = plotTravelTimesDifferentStartTimes(travelTimesArray,startTime,endTime,steplength)
 
+
 % the preferred time step (in minutes) between the ticks on the x-axis
  timeStep = 30;
 

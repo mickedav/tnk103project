@@ -1,6 +1,21 @@
-function [traject] = trajectory(cellSpeed, cellSizeAll, start_time)
+function [traject] = trajectory(cellSpeed, cellSizeAll, start_time, startCell, endCell)
 
-currCell = 9;
+if(startCell == NaN)
+    startCell = 9;
+end
+
+if(endCell == NaN)
+    endCell = 50;
+end
+
+if(startCell > endCell)
+    'Start Cell is bigger than end Cell, start set to 9 and end set to 50'
+    startCell = 9;
+    startCell = 50;
+end
+
+currCell = startCell;
+
 
 %don't know if this is correct, maybe not if the start time is more than 1
 %hour after the first time in the plot
@@ -15,7 +30,7 @@ deltaDist = 0;
 
 cellSpeed(isnan(cellSpeed)) = 0; 
 
-while (currCell < size(cellSizeAll,2)) && (minute < size(cellSpeed,2))
+while (currCell < endCell) && (minute < size(cellSpeed,2))
     
     currSpeed = cellSpeed(currCell,minute);
   
