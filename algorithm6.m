@@ -1,4 +1,12 @@
-function [GPSCellSpeedArray]=algorithm4(cellSpeedAggregatedTime,cellSize,totalNumberOfCells,numberOfLinks,numberOfTimeSteps,numberOfCells,firstCell)
+function [GPSCellSpeedArray]=algorithm6(cellSpeedAggregatedTime,cellSize,totalNumberOfCells,numberOfLinks,numberOfTimeSteps,numberOfCells,firstCell)
+
+% propagation velocity for free flow and congested situations, in m/s
+cfree = 70/3.6;
+ccong = -15/3.6;
+% Vc is the threshold between free and congested traffic and deltaV is the
+% transition width around Vc
+Vc = 50/3.6;
+deltaV = 10/3.6;
 
 lengthFromStartHalf(1) = cellSize(1)/2;
 lengthFromStartReal(1) = cellSize(1);
@@ -121,19 +129,25 @@ for t=2:(numberOfTimeSteps-1)
 
                 y1 = noMeasure1*tooLong1;
                 y2 = noMeasure2*tooLong2;
+%                 
+%                 N = y1*exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau))) + y2*exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)));
+%                 sumNv = y1*exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau)))*GPSCellSpeedArray(cellGPS1,t1) + y2*exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)))*GPSCellSpeedArray(cellGPS2,t2);
+%                 GPSCellSpeedArray(cell,t)=sumNv/N;
+%   
+            
+                Nfree = y1*exp(-((abs(x-x1)/sigma)+((abs(t-t1)-(abs(x-x1)/cfree))/tau))) + y2*exp(-((abs(x-x2)/sigma)+((abs(t-t2)-(abs(x-x2)/cfree))/tau)));
+                Ncong = y1*exp(-((abs(x-x1)/sigma)+((abs(t-t1)-(abs(x-x1)/ccong))/tau))) + y2*exp(-((abs(x-x2)/sigma)+((abs(t-t2)-(abs(x-x2)/ccong))/tau)));
+                sumNvfree = y1*exp(-((abs(x-x1)/sigma)+((abs(t-t1)-(abs(x-x1)/cfree))/tau)))*GPSCellSpeedArray(cellGPS1,t1)+  y2*exp(-((abs(x-x2)/sigma)+((abs(t-t2)-(abs(x-x2)/cfree))/tau)))*GPSCellSpeedArray(cellGPS2,t2);
+                sumNvcong = y1*exp(-((abs(x-x1)/sigma)+((abs(t-t1)-(abs(x-x1)/ccong))/tau)))*GPSCellSpeedArray(cellGPS1,t1) +  y2*exp(-((abs(x-x2)/sigma)+((abs(t-t2)-(abs(x-x2)/ccong))/tau)))*GPSCellSpeedArray(cellGPS2,t2);
+                Vfree = sumNvfree/Nfree;
+                Vcong = sumNvcong/Ncong;
+
+                Vstar = min(Vfree,Vcong);
                 
-                N = y1*exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau))) + y2*exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)));
-                sumNv = y1*exp(-((abs(x-x1)/sigma)+(abs(t-t1)/tau)))*GPSCellSpeedArray(cellGPS1,t1) + y2*exp(-((abs(x-x2)/sigma)+(abs(t-t2)/tau)))*GPSCellSpeedArray(cellGPS2,t2);
-                GPSCellSpeedArray(cell,t)=sumNv/N;
-         
-            
-            
-            %           % loop for two sensors at the time
-            
-            %                 x1 = lengthFromStartHalf(sensor1);
-            %                 x2 = lengthFromStartHalf(sensor2);
-            %                 t2 = t-1;
-            %                 t1 = t+1;
+%                 weight between the two speed fields 
+                weight = 0.5*(1+tanh((Vc-Vstar)/deltaV));
+
+                GPSCellSpeedArray(cell,t)=weight*Vcong+(1-weight)*Vfree;
             
         end
         
@@ -142,8 +156,27 @@ for t=2:(numberOfTimeSteps-1)
     
 end
 
-GPSCellSpeedArray(1:8,:)=0;
+% fill the first time step with the values from the second time step
+for i=1:totalNumberOfCells
+    if GPSCellSpeedArray(i,1) == 0
+        GPSCellSpeedArray(i,1) =GPSCellSpeedArray(i,2);
+    end
+end
 
+% fill the last time step with the values from the previous time step
+for i=1:totalNumberOfCells
+    if GPSCellSpeedArray(i,numberOfTimeSteps) == 0
+        GPSCellSpeedArray(i,numberOfTimeSteps) =GPSCellSpeedArray(i,numberOfTimeSteps-1);
+    end
+end
+
+% fill the last cell with values from previous cell
+if GPSCellSpeedArray(totalNumberOfCells,:)==0
+    GPSCellSpeedArray(totalNumberOfCells,:)=GPSCellSpeedArray(totalNumberOfCells-1,:);
+end
+
+% removes values from cell 1-8
+GPSCellSpeedArray(1:8,:)=0;
 
 
 end

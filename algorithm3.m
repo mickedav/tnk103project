@@ -3,7 +3,7 @@ function [estimatedSpeed]=algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeS
 tau = 0.5;
 % propagation velocity for free flow and congested situations, in m/s
 cfree = 70/3.6;
-ccong = -20/3.6;
+ccong = -15/3.6;
 % Vc is the threshold between free and congested traffic and deltaV is the
 % transition width around Vc
 Vc = 50/3.6;
@@ -90,4 +90,20 @@ for t=2:(numberOfTimeSteps-1)
         
     end
 end
+
+% fill the first time step with the values from the second time step
+for i=1:totalNumberOfCells
+    if estimatedSpeed(i,1) == 0
+        estimatedSpeed(i,1) =estimatedSpeed(i,2);
+    end
+end
+
+% fill the last time step with the values from the previous time step
+for i=1:totalNumberOfCells
+    if estimatedSpeed(i,numberOfTimeSteps) == 0
+        estimatedSpeed(i,numberOfTimeSteps) =estimatedSpeed(i,numberOfTimeSteps-1);
+    end
+end
+
+estimatedSpeed = estimatedSpeed.*3.6;
 end

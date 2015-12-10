@@ -29,11 +29,10 @@ GPSCellSpeedArray(isnan(GPSCellSpeedArray)) = 0;
 for t=2:(numberOfTimeSteps-1)
     
     % Loop through all cells from cell 9
-    for cell=2:(totalNumberOfCells-1)
-% firstCell
-         
+    for cell=firstCell:(totalNumberOfCells)
+        
         if isnan(cellSpeedAggregatedTime(cell,t))
-            noMeasure1 = 1; noMeasure2 = 1; tooLong1 = 1; tooLong2 = 1; 
+            noMeasure1 = 1; noMeasure2 = 1; tooLong1 = 1; tooLong2 = 1;
             % x is the position in the middle on the cell we want to estimate the speed
             % in
             x = lengthFromStartHalf(cell);
@@ -121,22 +120,22 @@ for t=2:(numberOfTimeSteps-1)
             % to the closest measurement/estimated speed in the same time
             % period
             if (noMeasure1 == 0 || tooLong1 ==0) && (noMeasure2 == 0 || tooLong2 == 0)
-           
-%                 if noMeasure1 == 0 || tooLong1 ==0
-%                GPSCellSpeedArray(cell,t)=GPSCellSpeedArray(cell+1,t);
-
-%                 elseif noMeasure2 == 0 || tooLong2 == 0
+                
+                %                 if noMeasure1 == 0 || tooLong1 ==0
+                %                GPSCellSpeedArray(cell,t)=GPSCellSpeedArray(cell+1,t);
+                
+                %                 elseif noMeasure2 == 0 || tooLong2 == 0
                 GPSCellSpeedArray(cell,t)=GPSCellSpeedArray(cell-1,t);
-%                 if cell == 40
-
-%                 if t==42
-%                    GPSCellSpeedArray(cell-1,t)
-%             GPSCellSpeedArray(50,42)
-%                 end
-%                 end
-
-%                 end
-
+                %                 if cell == 40
+                
+                %                 if t==42
+                %                    GPSCellSpeedArray(cell-1,t)
+                %             GPSCellSpeedArray(50,42)
+                %                 end
+                %                 end
+                
+                %                 end
+                
             else
                 
                 y1 = noMeasure1*tooLong1;
@@ -163,7 +162,27 @@ for t=2:(numberOfTimeSteps-1)
 end
 
 
+% fill the first time step with the values from the second time step
+for i=1:totalNumberOfCells
+    if GPSCellSpeedArray(i,1) == 0
+        GPSCellSpeedArray(i,1) =GPSCellSpeedArray(i,2);
+    end
+end
 
+% fill the last time step with the values from the previous time step
+for i=1:totalNumberOfCells
+    if GPSCellSpeedArray(i,numberOfTimeSteps) == 0
+        GPSCellSpeedArray(i,numberOfTimeSteps) =GPSCellSpeedArray(i,numberOfTimeSteps-1);
+    end
+end
+
+% fill the last cell with values from previous cell
+if GPSCellSpeedArray(totalNumberOfCells,:)==0
+    GPSCellSpeedArray(totalNumberOfCells,:)=GPSCellSpeedArray(totalNumberOfCells-1,:);
+end
+
+% removes values from cell 1-8
+GPSCellSpeedArray(1:8,:)=0;
 
 
 end

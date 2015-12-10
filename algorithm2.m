@@ -72,4 +72,19 @@ for t=2:(numberOfTimeSteps-1)
         
     end
 end
+
+% fill the first time step with the values from the second time step
+for i=1:totalNumberOfCells
+    if estimatedSpeed(i,1) == 0
+        estimatedSpeed(i,1) =estimatedSpeed(i,2);
+    end
+end
+
+% fill the last time step with the values from the previous time step
+for i=1:totalNumberOfCells
+    if estimatedSpeed(i,numberOfTimeSteps) == 0
+        estimatedSpeed(i,numberOfTimeSteps) =estimatedSpeed(i,numberOfTimeSteps-1);
+    end
+end
+estimatedSpeed = estimatedSpeed.*3.6;
 end

@@ -37,5 +37,5 @@ for t=indexSensorArray(1):totalNumberOfCells
     
 %     sensorAllCellsTravelTimesArray(t,:) = cellSize(index)./sensorAllCellsSpeedArray(t,:);
 end
-
+sensorAllCellsSpeedArray = sensorAllCellsSpeedArray.*3.6;
 end
