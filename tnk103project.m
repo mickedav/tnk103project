@@ -186,4 +186,8 @@ h=figure(7);
 plotHeatMap(estimatedSpeedFusion,startTime, endTime, numberOfTimeSteps, 'Data fusion for algorithm 2 (radar sensor data) and algorithm 6 (GPS data)');
 % print(h,'-dpng','H:\TNK103\plots\algorithm7For21mars.png')
 
+%% Get Bluetooth Data
+%links = [200]
+%BTdata = getTTFromBluetooth(links, network, starTime, endTime, linkIdArray)
+
 %%
