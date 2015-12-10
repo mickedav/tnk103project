@@ -100,12 +100,12 @@ for day = 1:numberOfDays
         %%
     end
     
-    %%      calculate mean speed of the stretch for one day, e.g. Thursdays
-    %     sensorCellMeanSpeedArray = nanmean(sensorCellSpeedArrayWeek,3);
-    %          h=figure(100)
-    %          plotHeatMap(sensorCellMeanSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'Thursdays mean');
-    %          print(h,'-dpng','H:\TNK103\plots\thursdayMean.png')
-    %%
+%     %      calculate mean speed of the stretch for one day, e.g. Thursdays
+%         sensorCellMeanSpeedArray = nanmean(sensorCellSpeedArrayWeek,3);
+%              h=figure(100)
+%              plotHeatMap(sensorCellMeanSpeedArray.*3.6,startTime, endTime, numberOfTimeSteps,'Thursdays mean');
+%              print(h,'-dpng','H:\TNK103\plots\thursdayMean.png')
+%     %
     
 end
 
@@ -118,10 +118,10 @@ plotHeatMap(estimatedSpeedAlg1,startTime, endTime, numberOfTimeSteps, 'Algorithm
 
 % travelTimesArray is the travel time for the stretch between cell 9-50.
 % RÄKNA UT TRAVEL TIMES FÖR SEKTIONVIS OCKSÅ HÄR?
-[plotTrajectoriesArray,travelTimesArray] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps);
-figure(11)
+% [plotTrajectoriesArray,travelTimesArray] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps);
+% figure(11)
 %  GÖR EN FUNCTION FÖR ATT PLOTTA TRAJECTORIES SNYGGT?
-plot(plotTrajectoriesArray')
+% plot(plotTrajectoriesArray')
 % plot the travelTimes at different start times
 % figure(21)
 % plotTravelTimesDifferentStartTimes(travelTimesArray,startTime,endTime, steplength);
@@ -135,12 +135,12 @@ plotHeatMap(estimatedSpeedAlg2,startTime, endTime, numberOfTimeSteps, 'Algorithm
 % print(h,'-dpng','H:\TNK103\plots\algorithm2For21mars.png')
 %%
 
-% Algorithm 3: radar sensors- Adaptive Smoothing Method
+%%Algorithm 3: radar sensors- Adaptive Smoothing Method
 estimatedSpeedAlg3 = algorithm3(sensorCellSpeedArray,cellSize,numberOfTimeSteps,numberOfSensors,totalNumberOfCells,numberOfLinks,numberOfCells);
 h=figure(3);
 plotHeatMap(estimatedSpeedAlg3,startTime, endTime, numberOfTimeSteps, 'Algorithm 3:  Radar sensors - Adaptive Smoothing Method');
-print(h,'-dpng','H:\TNK103\plots\algorithm3For21mars.png')
-%
+% print(h,'-dpng','H:\TNK103\plots\algorithm3For21mars.png')
+
 
 %% Algorithm 4: GPS data - to use in data fusion
 load('cellSpeedAggregatedTime')
@@ -151,11 +151,11 @@ plotHeatMap(estimatedSpeedAlg4,startTime, endTime, numberOfTimeSteps, 'Algorithm
 
 %%
 
-%% Algorithm 5: GPS data - to use standalone
+%% Algorithm 5: GPS data - Isotropic Smoothing Method - to use standalone
 load('cellSpeedAggregatedTime')
 estimatedSpeedAlg5 = algorithm5(cellSpeedAggregatedTime,cellSize,totalNumberOfCells,numberOfLinks,numberOfTimeSteps,numberOfCells,firstCell);
 h=figure(5);
-plotHeatMap(estimatedSpeedAlg5,startTime, endTime, numberOfTimeSteps, 'Algorithm 5: GPS data - to use standalone');
+plotHeatMap(estimatedSpeedAlg5,startTime, endTime, numberOfTimeSteps, 'Algorithm 5: GPS data - Isotropic Smoothing Method - to use standalone');
 % print(h,'-dpng','H:\TNK103\plots\algorithm5For21mars.png')
 
 % [plotTrajectoriesArray,travelTimesArray] = travelTimesInterval(estimatedSpeedAlg5, steplength, cellSizeAll, numberOfTimeSteps);
@@ -174,15 +174,22 @@ plotHeatMap(estimatedSpeedAlg6,startTime, endTime, numberOfTimeSteps, 'Algorithm
 % print(h,'-dpng','H:\TNK103\plots\algorithm6For21mars.png')
 %%
 
+%% Algorithm 7: GPS data - Adaptive Smoothing Method - to use standalone
+load('cellSpeedAggregatedTime')
+estimatedSpeedAlg7 = algorithm5(cellSpeedAggregatedTime,cellSize,totalNumberOfCells,numberOfLinks,numberOfTimeSteps,numberOfCells,firstCell);
+h=figure(7);
+plotHeatMap(estimatedSpeedAlg7,startTime, endTime, numberOfTimeSteps, 'Algorithm 7:  GPS data - Adaptive Smoothing Method - to use standalone');
+% print(h,'-dpng','H:\TNK103\plots\algorithm5For21mars.png')
+
+%%
 
 
 %% Data fusion: Data fusion for algorithm 3 (radar sensor data) and algorithm 6 (GPS data)
-
 estimatedSpeedFusion = dataFusion(numberOfTimeSteps,firstCell,totalNumberOfCells,estimatedSpeedAlg3,estimatedSpeedAlg6);
 % cell 9-19 vikta mer på sensor pga busskörfältet
 % if there are NaN or 0 in estimatedSpeedAlg6 -> vikta allt på sensordata
 %
-h=figure(7);
+h=figure(8);
 plotHeatMap(estimatedSpeedFusion,startTime, endTime, numberOfTimeSteps, 'Data fusion for algorithm 2 (radar sensor data) and algorithm 6 (GPS data)');
 % print(h,'-dpng','H:\TNK103\plots\algorithm7For21mars.png')
 
