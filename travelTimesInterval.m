@@ -1,20 +1,9 @@
 function [hej, travelTimesArray] = travelTimesInterval(temp, steplength, cellSizeAll, numberOfTimeSteps, startCell, endCell)
 
-if(isnan(startCell) || startCell < 9)
-    startCell = 9;
-end
-
-if(isnan(endCell) || endCell > 50)
-    endCell = 50;
-end
-
-if(startCell > endCell)
-    'Start Cell > End Cell'
+if nargin <= 4
     startCell = 9;
     endCell = 50;
 end
-
-endCell
 start_time = 1;
 numberOfSeconds = numberOfTimeSteps*60;
 NumOfIntervals = numberOfTimeSteps/steplength;
