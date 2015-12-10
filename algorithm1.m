@@ -1,5 +1,5 @@
-function [sensorAllCellsSpeedArray, sensorAllCellsTravelTimesArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize)
-
+function [sensorAllCellsSpeedArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize)
+% sensorAllCellsTravelTimesArray
 sensor = network.getRadarSensors;
 
 sensorCellSpeedArray(isnan(sensorCellSpeedArray)) = 0;
@@ -35,7 +35,7 @@ for t=indexSensorArray(1):totalNumberOfCells
         
     end
     
-    sensorAllCellsTravelTimesArray(t,:) = cellSize(index)./sensorAllCellsSpeedArray(t,:);
+%     sensorAllCellsTravelTimesArray(t,:) = cellSize(index)./sensorAllCellsSpeedArray(t,:);
 end
 
 end

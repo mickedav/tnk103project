@@ -69,7 +69,7 @@ title(startTimestr)
 xlabel('time')
 ylabel('cell ID')
 ylabel(c,'km/h')
- set(c, 'ylim', [0 110])
+set(handle(c), 'ylim', [0 110])
 
 %   hold on
 % numberOfTimeSteps/timeStep + 1;

@@ -1,5 +1,10 @@
 function []  = plotTravelTimesDifferentStartTimes(travelTimesArray,startTime,endTime,steplength)
 
+% the preferred time step (in minutes) between the ticks on the x-axis
+ timeStep = 30;
+
+% ticks = numberOfTimeSteps/timeStep+1;
+
 numberOfTimeSteps = size(travelTimesArray,2);
 
 % convert travel times from seconds to minutes
@@ -13,10 +18,10 @@ formatOut = 'HH:MM';
 startTimeNum = datenum(datestr(startTimeString,formatOut));
 endTimeNum = datenum(datestr(endTimeString,formatOut));
 %
-% steplength = 15;
+%  steplength = 15;
 % determine how many ticks that the x-axis is going to have
- ticks = numberOfTimeSteps/steplength + 1;
-% ticks = 6;
+ ticks = numberOfTimeSteps/steplength + 1
+% ticks = 7;
 % ticks = numberOfTimeSteps/timeStep + 1;
 %  ticks = size(travelTimesArray,2)+1;
 
@@ -29,12 +34,13 @@ xDataStr = cell(ticks,1);
 for i=1:(ticks)
     xDataStr{i} =[datestr(xDataNum(i),formatOut)];
 end
-
+%  numberOfTimeSteps=180;
 plot(travelTimesArray)
 % 
 % % set the tick labels on the x-axis
 set(gca,'XLim',[0 numberOfTimeSteps])
 set(gca,'XTick',[0:steplength:numberOfTimeSteps])
+
 set(gca,'XTickLabel',xDataStr)
 
 

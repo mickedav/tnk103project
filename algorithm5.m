@@ -83,8 +83,6 @@ for t=2:(numberOfTimeSteps-1)
                     x2 = 0;
                     noMeasure2 = 0;
                     cellGPS2 = i;
-t
-cell
                     
                 else
                     %   if there is a measured or estimated speed that is greater than zero ->
