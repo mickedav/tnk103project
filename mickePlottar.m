@@ -192,8 +192,12 @@ estimatedSpeedFusion = dataFusion(numberOfTimeSteps,firstCell,totalNumberOfCells
 % print(h,'-dpng','H:\TNK103\plots\algorithm7For21mars.png')
 
 %% Get Bluetooth Data
-links = [200, 197];
-[BTdata cells] = getTTFromBluetooth(links, network, startTime, endTime, linkIdArray);
+links = [200, 198];
+[temp cells] = getTTFromBluetooth(links, network, startTime, endTime, linkIdArray);
+BTdata(1,2:size(temp(1,:),2)) = temp(1,1:end-1);
+BTdata(1,1) = BTdata(1,2);
+BTdata(2,2:size(temp(2,:),2)) = temp(2,1:end-1);
+BTdata(2,1) = BTdata(2,2);
 
 
 %%
