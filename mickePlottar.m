@@ -5,10 +5,8 @@
 % clear all
 clc
 close all
-%
-%
-% % Adding a path to the top folder.
-%       addpath(genpath('../'),'-end');
+
+addpath(genpath('../'),'-end');
 % %
 import core.*               %Core classes
 
@@ -194,30 +192,48 @@ estimatedSpeedFusion = dataFusion(numberOfTimeSteps,firstCell,totalNumberOfCells
 % print(h,'-dpng','H:\TNK103\plots\algorithm7For21mars.png')
 
 %% Get Bluetooth Data
-links = [200];
-%BTdata = getTTFromBluetooth(links, network, startTime, endTime, linkIdArray);
+links = [200, 197];
+[BTdata cells] = getTTFromBluetooth(links, network, startTime, endTime, linkIdArray);
+
 
 %%
+segment1Name = '1';
+segment2Name = '2';
 
 %% Plots
 %Plot heatmaps for sensor data algorithms
 figure(1)
-subplot(1,3,1)
+subplot(2,2,1)
 plotHeatMap(estimatedSpeedAlg1,startTime, endTime, numberOfTimeSteps, 'Algorithm 1: Radar sensors - only space fill');
-subplot(1,3,2)
+subplot(2,2,2)
 plotHeatMap(estimatedSpeedAlg2,startTime, endTime, numberOfTimeSteps, 'Algorithm 2: Radar sensors - Isotropic Smoothing Method');
-subplot(1,3,3)
+subplot(2,2,3.5)
 plotHeatMap(estimatedSpeedAlg3,startTime, endTime, numberOfTimeSteps, 'Algorithm 3:  Radar sensors - Adaptive Smoothing Method');
 
 %Plot tt for alg 1,2,3 and bt-data
-[a ttAlg1] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps, 30, 36);
-[a ttAlg2] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps, 30, 36);
-[a ttAlg3] = travelTimesInterval(estimatedSpeedAlg3, steplength, cellSizeAll, numberOfTimeSteps, 30, 36);
+[a ttAlg11] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
+[a ttAlg21] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
+[a ttAlg31] = travelTimesInterval(estimatedSpeedAlg3, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
+
+[a ttAlg12] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
+[a ttAlg22] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
+[a ttAlg32] = travelTimesInterval(estimatedSpeedAlg3, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
 figure(2)
+%suptitle('Travel Times radar- and BT data')
+subplot(2,1,1)
 hold on;
-%plotTravelTimesDifferentStartTimes(ttAlg1)
-%plotTravelTimesDifferentStartTimes(ttAlg2)
-%plotTravelTimesDifferentStartTimes(ttAlg3)
+plotTravelTimesDifferentStartTimes(BTdata(1,:), startTime, endTime, steplength,'--ob', segment1Name)
+plotTravelTimesDifferentStartTimes(ttAlg11, startTime, endTime, steplength,'--xr', segment1Name)
+plotTravelTimesDifferentStartTimes(ttAlg21, startTime, endTime, steplength,'--sg', segment1Name)
+plotTravelTimesDifferentStartTimes(ttAlg31, startTime, endTime, steplength,'-->k', segment1Name)
+legend('BT','Alg1','Alg2','Alg3','Location','northwest')
+subplot(2,1,2)
+hold on;
+plotTravelTimesDifferentStartTimes(BTdata(2,:), startTime, endTime, steplength,'--ob', segment2Name)
+plotTravelTimesDifferentStartTimes(ttAlg12, startTime, endTime, steplength,'--xr', segment2Name)
+plotTravelTimesDifferentStartTimes(ttAlg22, startTime, endTime, steplength,'--sg', segment2Name)
+plotTravelTimesDifferentStartTimes(ttAlg32, startTime, endTime, steplength,'-->k', segment2Name)
+legend('BT','Alg1','Alg2','Alg3','Location','northwest')
 hold off;
 
 %Plot GPS Heatmaps
@@ -227,21 +243,35 @@ plotHeatMap(estimatedSpeedAlg5,startTime, endTime, numberOfTimeSteps, 'Algorithm
 subplot(1,2,2)
 plotHeatMap(estimatedSpeedAlg7,startTime, endTime, numberOfTimeSteps, 'Algorithm 7:  GPS data - Adaptive Smoothing Method - to use standalone');
 
-%Plot heatMaps of the different algorithms
+%Plot heatMaps of the different algorithms (Done!)
 figure(4)
-subplot(1,3,1)
+subplot(2,2,1)
 plotHeatMap(estimatedSpeedAlg3,startTime, endTime, numberOfTimeSteps, 'Algorithm 3:  Radar sensors - Adaptive Smoothing Method');
-subplot(1,3,2)
+subplot(2,2,2)
 plotHeatMap(estimatedSpeedAlg6,startTime, endTime, numberOfTimeSteps, 'Algorithm 6: GPS data - Adaptive Smoothing Method');
-subplot(1,3,3)
-plotHeatMap(estimatedSpeedFusion,startTime, endTime, numberOfTimeSteps, 'Data fusion for algorithm 2 (radar sensor data) and algorithm 6 (GPS data)');
+subplot(2,2,3.5)
+plotHeatMap(estimatedSpeedFusion,startTime, endTime, numberOfTimeSteps, 'Data fusion for algorithm 3 (radar sensor data) and algorithm 6 (GPS data)');
+
+
+[a ttAlg61] = travelTimesInterval(estimatedSpeedAlg6, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
+[a ttAlgfus1] = travelTimesInterval(estimatedSpeedFusion, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
+[a ttAlg62] = travelTimesInterval(estimatedSpeedAlg6, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
+[a ttAlgfus2] = travelTimesInterval(estimatedSpeedFusion, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
 
 figure(5)
-[a ttAlg6] = travelTimesInterval(estimatedSpeedAlg6, steplength, cellSizeAll, numberOfTimeSteps, 30, 36);
-[a ttAlgfus] = travelTimesInterval(estimatedSpeedFusion, steplength, cellSizeAll, numberOfTimeSteps, 30, 36);
-
+%suptitle('Travel Times BT, GPS, radar and data fusion')
+subplot(2,1,1)
 hold on;
-plot(ttAlg3)
-plot(ttAlg6)
-plot(ttAlgfus)
+plotTravelTimesDifferentStartTimes(BTdata(1,:), startTime, endTime, steplength,'--ob', segment1Name)
+plotTravelTimesDifferentStartTimes(ttAlg31, startTime, endTime, steplength,'--xr', segment1Name)
+plotTravelTimesDifferentStartTimes(ttAlg61, startTime, endTime, steplength,'--sg', segment1Name)
+plotTravelTimesDifferentStartTimes(ttAlgfus1, startTime, endTime, steplength,'-->k', segment1Name)
+legend('BT','Alg3','Alg6','Fus','Location','northwest')
+subplot(2,1,2)
+hold on;
+plotTravelTimesDifferentStartTimes(BTdata(2,:), startTime, endTime, steplength,'--ob', segment2Name)
+plotTravelTimesDifferentStartTimes(ttAlg32, startTime, endTime, steplength,'--xr', segment2Name)
+plotTravelTimesDifferentStartTimes(ttAlg62, startTime, endTime, steplength,'--sg', segment2Name)
+plotTravelTimesDifferentStartTimes(ttAlgfus2, startTime, endTime, steplength,'-->k', segment2Name)
+legend('BT','Alg3','Alg6','Fus','Location','northwest')
 hold off;

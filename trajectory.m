@@ -36,7 +36,7 @@ while (currCell < endCell) && (minute < size(cellSpeed,2))
   
     %travelled dist during 1 second
     %rewrite km/h to m/s (IS THIS NEEDED???) (*1 since one second)
-    deltaDist = deltaDist + (currSpeed)*1;
+    deltaDist = deltaDist + (currSpeed)/3.6
     
     if deltaDist > cellSizeAll(currCell)
         %move on to the next cell

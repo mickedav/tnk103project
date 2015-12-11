@@ -1,4 +1,4 @@
-function [tt, cells, cellSizeAll] = getTTFromBluetooth(link, network, starTime, endTime, linkIdArray)
+function [tt, cells, cellSizeAll] = getTTFromBluetooth(link, network, startTime, endTime, linkIdArray)
 import bAE.*
 
 [numberOfCells, cellSize, lengthStretch, totalNumberOfCells, cellSizeAll] = getCellMap(network, linkIdArray);
@@ -8,7 +8,7 @@ counter = 1;
 
 for i = link
         
-    ttBluetooth = output.TravelTimeOutput.getBluetoothTravelTimeOutput(network, i, starTime, endTime, 5);
+    ttBluetooth = output.TravelTimeOutput.getBluetoothTravelTimeOutput(network, i, startTime, endTime, 5);
     
     startCell = ttBluetooth.route.getFirstSpot;
     endCell = ttBluetooth.route.getLastSpot;

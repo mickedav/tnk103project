@@ -1,7 +1,7 @@
 
 % Adding a path to the top folder.
 addpath(genpath('../'),'-end');
-
+close all
 import core.*               %Core classes
 
 % Setting the enviroment (i.e loading all jar files)
@@ -43,10 +43,11 @@ numberOfTimeSteps = 180;
 load('toCoolForSchool.mat')
 temp = estimatedSpeedAlg1;
 
-[tt, cells, cellSizeAll] = getTTFromBluetooth([200, 195], network, start_TimeStamp, end_TimeStamp, linkIdArray);
+[tt, cells, cellSizeAll] = getTTFromBluetooth([200], network, start_TimeStamp, end_TimeStamp, linkIdArray);
 
 [hej, travelTimesArray] = travelTimesInterval(temp, steplength, cellSizeAll, numberOfTimeSteps, 30, 36);
+hold on
 figure(1)
-plotTravelTimesDifferentStartTimes(tt(1,:), start_TimeStamp, end_TimeStamp, k)
-figure(2)
-plotTravelTimesDifferentStartTimes(travelTimesArray, start_TimeStamp, end_TimeStamp, k)
+plotTravelTimesDifferentStartTimes(tt(1,:), start_TimeStamp, end_TimeStamp, k, '--b')
+plotTravelTimesDifferentStartTimes(travelTimesArray, start_TimeStamp, end_TimeStamp, k, '--r')
+hold off
