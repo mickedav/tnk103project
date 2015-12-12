@@ -55,7 +55,7 @@ endSec = 10860;
 cellSpeedAggregatedTime = aggregateTime(speedDataAggregated, endSec, cellSizeAll);
 
 start_time = 1;
-travelTime = trajectory(cellSpeedAggregatedTime, cellSizeAll, start_time);
+% travelTime = trajectory(cellSpeedAggregatedTime, cellSizeAll, start_time);
 
 %T = squeeze(GpsSpeedData(1,:,:) - GpsSpeedData(2,:,:));
 %T = abs(T);
@@ -63,8 +63,9 @@ travelTime = trajectory(cellSpeedAggregatedTime, cellSizeAll, start_time);
 %for i = 1:nbrDays
    % GpsSpeedDataDay = squeeze(GpsSpeedData(i,:,:));
     %figure(i)
-    plotHeatMap(cellSpeedAggregatedTime, start_TimeStamp, end_TimeStamp, length(cellSpeedAggregatedTime), 'hej', cellSizeAll);
-%end
+    plotHeatMap(cellSpeedAggregatedTime, start_TimeStamp, end_TimeStamp, length(cellSpeedAggregatedTime), 'Raw GPS data');
+
+    %end
 tock = Time();
 tock.secondsSince(tick);
 % 

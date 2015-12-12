@@ -43,7 +43,7 @@ set(gca,'XLim',[0 numberOfTimeSteps])
 set(gca,'XTick',[0:steplength:numberOfTimeSteps])
 
 set(gca,'XTickLabel',xDataStr)
-title(['Travel time at different start times at segment: ' segment] )
+title(['Travel time at different start times at section: ' segment] )
 xlabel('start time')
 ylabel('minutes')
 

@@ -201,8 +201,8 @@ BTdata(2,1) = BTdata(2,2);
 
 
 %%
-segment1Name = '1';
-segment2Name = '2';
+segment1Name = 'South (Cell 30-36)';
+segment2Name = 'North (Cell 19-24)';
 
 %% Plots
 %Plot heatmaps for sensor data algorithms
@@ -212,7 +212,7 @@ plotHeatMap(estimatedSpeedAlg1,startTime, endTime, numberOfTimeSteps, 'Algorithm
 subplot(2,2,2)
 plotHeatMap(estimatedSpeedAlg2,startTime, endTime, numberOfTimeSteps, 'Algorithm 2: Radar sensors - Isotropic Smoothing Method');
 subplot(2,2,3.5)
-plotHeatMap(estimatedSpeedAlg3,startTime, endTime, numberOfTimeSteps, 'Algorithm 3:  Radar sensors - Adaptive Smoothing Method');
+plotHeatMap(estimatedSpeedAlg3,startTime, endTime, numberOfTimeSteps, 'Algorithm 3: Radar sensors - Adaptive Smoothing Method');
 
 %Plot tt for alg 1,2,3 and bt-data
 [a ttAlg11] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
@@ -243,9 +243,9 @@ hold off;
 %Plot GPS Heatmaps
 figure(3)
 subplot(1,2,1)
-plotHeatMap(estimatedSpeedAlg5,startTime, endTime, numberOfTimeSteps, 'Algorithm 5: GPS data - Isotropic Smoothing Method - to use standalone');
+plotHeatMap(estimatedSpeedAlg5,startTime, endTime, numberOfTimeSteps, 'Algorithm 5: GPS data - Isotropic Smoothing Method');
 subplot(1,2,2)
-plotHeatMap(estimatedSpeedAlg7,startTime, endTime, numberOfTimeSteps, 'Algorithm 7:  GPS data - Adaptive Smoothing Method - to use standalone');
+plotHeatMap(estimatedSpeedAlg7,startTime, endTime, numberOfTimeSteps, 'Algorithm 7:  GPS data - Adaptive Smoothing Method');
 
 %Plot heatMaps of the different algorithms (Done!)
 figure(4)
@@ -254,7 +254,7 @@ plotHeatMap(estimatedSpeedAlg3,startTime, endTime, numberOfTimeSteps, 'Algorithm
 subplot(2,2,2)
 plotHeatMap(estimatedSpeedAlg6,startTime, endTime, numberOfTimeSteps, 'Algorithm 6: GPS data - Adaptive Smoothing Method');
 subplot(2,2,3.5)
-plotHeatMap(estimatedSpeedFusion,startTime, endTime, numberOfTimeSteps, 'Data fusion for algorithm 3 (radar sensor data) and algorithm 6 (GPS data)');
+plotHeatMap(estimatedSpeedFusion,startTime, endTime, numberOfTimeSteps, 'Data fusion for Algorithm 3 (radar sensor data) and Algorithm 6 (GPS data)');
 
 
 [a ttAlg61] = travelTimesInterval(estimatedSpeedAlg6, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
