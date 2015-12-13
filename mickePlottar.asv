@@ -304,12 +304,10 @@ hold off;
 %% STDV calc
 % STD - Sensor alg
    STDSensor(1,:) = getStandardDev(BTdata(1,:), [ttAlg11; ttAlg21; ttAlg31]);
-   STDSensor(2,:) = getStandardDev(BTdata(2,:), [ttAlg12; ttAlg22; ttAlg32]);
+   STDSensor(2,:) = getStandardDev(BTdata(1,:), [ttAlg12; ttAlg22; ttAlg32]);
 % STD - GPS
-   STDGPS(1,:) = getStandardDev(BTdata(1,:), [ttAlg51; ttAlg71]);
-   STDGPS(2,:) = getStandardDev(BTdata(2,:), [ttAlg52; ttAlg72]);
-% STD - Fusion etc.
-   STDAll(1,:) = getStandardDev(BTdata(1,:), [ttAlg31; ttAlg61; ttAlgfus1]);
-   STDAll(2,:) = getStandardDev(BTdata(2,:), [ttAlg32; ttAlg62; ttAlgfus2]);
+   STDGPS(1,:) = getStandardDev(BTdata(1,:), [ttAlg11; ttAlg21]);
+   STDGPS(2,:) = getStandardDev(BTdata(1,:), [ttAlg12; ttAlg22]);
+
 
  
