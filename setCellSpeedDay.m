@@ -1,4 +1,4 @@
-function [cellSpeedAggregatedTime, cellSpeed, endSec, totalNumberOfCells,  cellSizeAll] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst, row)
+function [cellSpeedAggregatedTime, cellSpeed, endSec, totalNumberOfCells, cellSizeAll] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst, row)
 
 % Imports
 import core.*

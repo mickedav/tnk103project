@@ -10,15 +10,15 @@ for t=1:numberOfTimeSteps
             estimatedSpeedFusion(cell,t) = estimatedSpeedAlg3(cell,t);
             % cells with lower number than 19, weight more on weightSensor
             % because there are public transport lanes which the taxis use
-        elseif cell<=19
+        elseif cell <= 19
             weightSensor = 0.9;
             weightGPS = 1-weightSensor;
-            estimatedSpeedFusion(cell,t) = weightSensor.*estimatedSpeedAlg3(cell,t)+weightGPS.*estimatedSpeedAlg6(cell,t);
+            estimatedSpeedFusion(cell,t) = (weightSensor.*estimatedSpeedAlg3(cell,t)) + (weightGPS.*estimatedSpeedAlg6(cell,t));
             % other cells, weight
         else
             weightSensor = 0.5;
             weightGPS = 1-weightSensor;
-            estimatedSpeedFusion(cell,t) = weightSensor.*estimatedSpeedAlg3(cell,t)+weightGPS.*estimatedSpeedAlg6(cell,t);
+            estimatedSpeedFusion(cell,t) = (weightSensor.*estimatedSpeedAlg3(cell,t)) + (weightGPS.*estimatedSpeedAlg6(cell,t));
         end
         
     end

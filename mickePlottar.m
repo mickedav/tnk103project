@@ -193,7 +193,7 @@ estimatedSpeedFusion = dataFusion(numberOfTimeSteps,firstCell,totalNumberOfCells
 
 %% Get Bluetooth Data
 links = [200, 198];
-[temp cells] = getTTFromBluetooth(links, network, startTime, endTime, linkIdArray);
+[temp, cells, cellOffset] = getTTFromBluetooth(links, network, startTime, endTime, linkIdArray);
 BTdata(1,2:size(temp(1,:),2)) = temp(1,1:end-1);
 BTdata(1,1) = BTdata(1,2);
 BTdata(2,2:size(temp(2,:),2)) = temp(2,1:end-1);
@@ -215,13 +215,13 @@ subplot(2,2,3.5)
 plotHeatMap(estimatedSpeedAlg3,startTime, endTime, numberOfTimeSteps, 'Algorithm 3: Radar sensors - Adaptive Smoothing Method');
 
 %Plot tt for alg 1,2,3 and bt-data
-[a ttAlg11] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
-[a ttAlg21] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
-[a ttAlg31] = travelTimesInterval(estimatedSpeedAlg3, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
+[a ttAlg11] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2), cellOffset(1,1), cellOffset(1,2));
+[a ttAlg21] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2), cellOffset(1,1), cellOffset(1,2));
+[a ttAlg31] = travelTimesInterval(estimatedSpeedAlg3, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2), cellOffset(1,1), cellOffset(1,2));
 
-[a ttAlg12] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
-[a ttAlg22] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
-[a ttAlg32] = travelTimesInterval(estimatedSpeedAlg3, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
+[a ttAlg12] = travelTimesInterval(estimatedSpeedAlg1, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2), cellOffset(2,1), cellOffset(2,2));
+[a ttAlg22] = travelTimesInterval(estimatedSpeedAlg2, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2), cellOffset(2,1), cellOffset(2,2));
+[a ttAlg32] = travelTimesInterval(estimatedSpeedAlg3, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2), cellOffset(2,1), cellOffset(2,2));
 
 figure(2)
 %suptitle('Travel Times radar- and BT data')
@@ -250,10 +250,10 @@ plotHeatMap(estimatedSpeedAlg7,startTime, endTime, numberOfTimeSteps, 'Algorithm
 
 %Plot tt for GPS algorithms
 
-[a ttAlg51] = travelTimesInterval(estimatedSpeedAlg5, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
-[a ttAlg71] = travelTimesInterval(estimatedSpeedAlg7, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
-[a ttAlg52] = travelTimesInterval(estimatedSpeedAlg5, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
-[a ttAlg72] = travelTimesInterval(estimatedSpeedAlg7, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
+[a ttAlg51] = travelTimesInterval(estimatedSpeedAlg5, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2), cellOffset(1,1), cellOffset(1,2));
+[a ttAlg71] = travelTimesInterval(estimatedSpeedAlg7, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2), cellOffset(1,1), cellOffset(1,2));
+[a ttAlg52] = travelTimesInterval(estimatedSpeedAlg5, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2), cellOffset(2,1), cellOffset(2,2));
+[a ttAlg72] = travelTimesInterval(estimatedSpeedAlg7, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2), cellOffset(2,1), cellOffset(2,2));
 figure(4)
 subplot(2,1,1)
 hold on;
@@ -279,10 +279,10 @@ subplot(2,2,3.5)
 plotHeatMap(estimatedSpeedFusion,startTime, endTime, numberOfTimeSteps, 'Data fusion for Algorithm 3 (radar sensor data) and Algorithm 6 (GPS data)');
 
 
-[a ttAlg61] = travelTimesInterval(estimatedSpeedAlg6, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
-[a ttAlgfus1] = travelTimesInterval(estimatedSpeedFusion, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2));
-[a ttAlg62] = travelTimesInterval(estimatedSpeedAlg6, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
-[a ttAlgfus2] = travelTimesInterval(estimatedSpeedFusion, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2));
+[a ttAlg61] = travelTimesInterval(estimatedSpeedAlg6, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2), cellOffset(1,1), cellOffset(1,2));
+[a ttAlgfus1] = travelTimesInterval(estimatedSpeedFusion, steplength, cellSizeAll, numberOfTimeSteps, cells(1,1), cells(1,2), cellOffset(1,1), cellOffset(1,2));
+[a ttAlg62] = travelTimesInterval(estimatedSpeedAlg6, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2), cellOffset(2,1), cellOffset(2,2));
+[a ttAlgfus2] = travelTimesInterval(estimatedSpeedFusion, steplength, cellSizeAll, numberOfTimeSteps, cells(2,1), cells(2,2), cellOffset(2,1), cellOffset(2,2));
 figure(6)
 %suptitle('Travel Times BT, GPS, radar and data fusion')
 subplot(2,1,1)

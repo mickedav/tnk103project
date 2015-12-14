@@ -1,8 +1,11 @@
-function [hej, travelTimesArray] = travelTimesInterval(temp, steplength, cellSizeAll, numberOfTimeSteps, startCell, endCell)
-
+function [hej, travelTimesArray] = travelTimesInterval(temp, steplength, cellSizeAll, numberOfTimeSteps, startCell, endCell, startOffset, endOffset)
+startOffset
+endOffset
 if nargin <= 4
     startCell = 9;
     endCell = 50;
+    startOffset = 0;
+    endOffset = 0;
 end
 start_time = 1;
 numberOfSeconds = numberOfTimeSteps*60;
@@ -24,7 +27,7 @@ while intervals < NumOfIntervals
         startTimeSec = startTimeSec + steplength*60;
     end
     
-    travelTime = trajectory(temp, cellSizeAll, start_time, startCell, endCell);
+    travelTime = trajectory(temp, cellSizeAll, start_time, startCell, endCell, startOffset, endOffset);
     
     if size(travelTime,2) + startTimeSec > maxTT
         maxTT = size(travelTime,2) + startTimeSec;

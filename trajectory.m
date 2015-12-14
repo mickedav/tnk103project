@@ -1,4 +1,4 @@
-function [traject] = trajectory(cellSpeed, cellSizeAll, start_time, startCell, endCell)
+function [traject] = trajectory(cellSpeed, cellSizeAll, start_time, startCell, endCell, startOffset, endOffset)
 
 if(startCell == NaN)
     startCell = 9;
@@ -26,9 +26,10 @@ second = 1;
 %second = start_time.getSecond;
 totSecond = 1;
 traject = 0;
-deltaDist = 0;
+deltaDist = startOffset;
 
 cellSpeed(isnan(cellSpeed)) = 0; 
+
 
 while (currCell < endCell) && (minute < size(cellSpeed,2))
     
@@ -49,12 +50,12 @@ while (currCell < endCell) && (minute < size(cellSpeed,2))
         minute = minute + 1;
         second = 1;
     end
-    
     traject(totSecond) = currCell;
     %check next second
     second = second + 1;
     totSecond = totSecond + 1;
 end
-
+    temp = floor(endOffset/(currSpeed/3.6));
+    traject(end:(end + temp)) = endCell;
 end
 
