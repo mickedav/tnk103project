@@ -312,4 +312,5 @@ hold off;
    STDAll(1,:) = getStandardDev(BTdata(1,:), [ttAlg31; ttAlg61; ttAlgfus1]);
    STDAll(2,:) = getStandardDev(BTdata(2,:), [ttAlg32; ttAlg62; ttAlgfus2]);
 
- 
+Deviation(1,:) = getStandardDev(BTdata(1,:), [ttAlg11; ttAlg21; ttAlg31; ttAlg51; ttAlg61; ttAlg71; ttAlgfus1]);
+Deviation(2,:) = getStandardDev(BTdata(2,:), [ttAlg12; ttAlg22; ttAlg32; ttAlg52; ttAlg62; ttAlg72; ttAlgfus2]);
