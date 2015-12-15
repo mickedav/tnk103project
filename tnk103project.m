@@ -176,7 +176,7 @@ plotHeatMap(estimatedSpeedAlg6,startTime, endTime, numberOfTimeSteps, 'Algorithm
 
 %% Algorithm 7: GPS data - Adaptive Smoothing Method - to use standalone
 load('cellSpeedAggregatedTime')
-estimatedSpeedAlg7 = algorithm5(cellSpeedAggregatedTime,cellSize,totalNumberOfCells,numberOfLinks,numberOfTimeSteps,numberOfCells,firstCell);
+estimatedSpeedAlg7 = algorithm7(cellSpeedAggregatedTime,cellSize,totalNumberOfCells,numberOfLinks,numberOfTimeSteps,numberOfCells,firstCell);
 h=figure(7);
 plotHeatMap(estimatedSpeedAlg7,startTime, endTime, numberOfTimeSteps, 'Algorithm 7:  GPS data - Adaptive Smoothing Method - to use standalone');
 % print(h,'-dpng','H:\TNK103\plots\algorithm5For21mars.png')
