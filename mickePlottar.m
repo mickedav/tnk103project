@@ -6,7 +6,7 @@
 clc
 close all
 
-addpath(genpath('../'),'-end');
+%addpath(genpath('../'),'-end');
 % %
 import core.*               %Core classes
 
@@ -263,9 +263,9 @@ plotTravelTimesDifferentStartTimes(ttAlg71, startTime, endTime, steplength,'--sg
 legend('BT','Alg5','Alg7','Location','northwest')
 subplot(2,1,2)
 hold on;
-plotTravelTimesDifferentStartTimes(BTdata(2,:), startTime, endTime, steplength,'--ob', segment1Name)
-plotTravelTimesDifferentStartTimes(ttAlg52, startTime, endTime, steplength,'--xr', segment1Name)
-plotTravelTimesDifferentStartTimes(ttAlg72, startTime, endTime, steplength,'--sg', segment1Name)
+plotTravelTimesDifferentStartTimes(BTdata(2,:), startTime, endTime, steplength,'--ob', segment2Name)
+plotTravelTimesDifferentStartTimes(ttAlg52, startTime, endTime, steplength,'--xr', segment2Name)
+plotTravelTimesDifferentStartTimes(ttAlg72, startTime, endTime, steplength,'--sg', segment2Name)
 legend('BT','Alg5','Alg7','Location','northwest')
 hold off;
 
