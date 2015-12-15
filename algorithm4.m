@@ -142,6 +142,33 @@ for t=2:(numberOfTimeSteps-1)
     
 end
 
+% fill the last ti% fill the last time step with the values from the previous time step
+for i=1:totalNumberOfCells
+    if GPSCellSpeedArray(i,numberOfTimeSteps) == 0
+        GPSCellSpeedArray(i,numberOfTimeSteps) =GPSCellSpeedArray(i,numberOfTimeSteps-1);
+    end
+end
+
+% fill the last cell with values from previous cell
+if GPSCellSpeedArray(totalNumberOfCells,:)==0
+    GPSCellSpeedArray(totalNumberOfCells,:)=GPSCellSpeedArray(totalNumberOfCells-1,:);
+end
+
+% removes values from cell 1-8
+GPSCellSpeedArray(1:8,:)=0;
+% fill the last time step with the values from the previous time step
+for i=1:totalNumberOfCells
+    if GPSCellSpeedArray(i,numberOfTimeSteps) == 0
+        GPSCellSpeedArray(i,numberOfTimeSteps) =GPSCellSpeedArray(i,numberOfTimeSteps-1);
+    end
+end
+
+% fill the last cell with values from previous cell
+if GPSCellSpeedArray(totalNumberOfCells,:)==0
+    GPSCellSpeedArray(totalNumberOfCells,:)=GPSCellSpeedArray(totalNumberOfCells-1,:);
+end
+
+% removes values from cell 1-8
 GPSCellSpeedArray(1:8,:)=0;
 
 

@@ -154,7 +154,6 @@ for t=2:(numberOfTimeSteps-1)
     
 end
 
-
 % fill the first time step with the values from the second time step
 for i=1:totalNumberOfCells
     if GPSCellSpeedArray(i,1) == 0

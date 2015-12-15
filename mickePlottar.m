@@ -6,7 +6,7 @@
 clc
 close all
 
-%addpath(genpath('../'),'-end');
+addpath(genpath('../'),'-end');
 % %
 import core.*               %Core classes
 
