@@ -5,23 +5,21 @@ function [temp] = plotHeatMap(temp,startTime,endTime, numberOfTimeSteps,titleStr
 % colors on the colorbar
 temp(isnan(temp)) = 0;
 
-
 % switch rows in order to plot with vehicles enter from south
 switchArray = temp;
-
 for i =1:50
     j=51-i;
     temp(i,:)=switchArray(j,:);
-
 end
 
 % the preferred time step (in minutes) between the ticks on the x-axis
 timeStep = 30;
 
-% make the startTime and endTime to the strings
+% make the startTime and endTime to strings
 startTimeString = matlab.unittest.diagnostics.ConstraintDiagnostic.getDisplayableString(startTime);
 endTimeString =  matlab.unittest.diagnostics.ConstraintDiagnostic.getDisplayableString(endTime);
 
+% format the ticklabels 
 formatOut = 'HH:MM';
 startTimeNum = datenum(datestr(startTimeString,formatOut));
 endTimeNum = datenum(datestr(endTimeString,formatOut));
@@ -39,7 +37,7 @@ for i=1:(ticks)
     xDataStr{i} =[datestr(xDataNum(i),formatOut)];
 end
 
-% load the saved color map from mycmap.mat and plot temp
+% load the saved color map from mycolor.mat and plot temp
 load('mycolor','color')
 imagesc(temp);
 colormap(color);
@@ -50,15 +48,16 @@ set(gca,'XLim',[0 numberOfTimeSteps])
 set(gca,'XTick',[0:timeStep:numberOfTimeSteps])
 set(gca,'XTickLabel',xDataStr)
 
+% set the y-axis
 yDataNum = [50 45 40 35 30 25 20 15 10 5];
 
+% set the tick labels on the y-axis
 set(gca,'YLim',[1 50])
 set(gca,'YTick',[1:5:50])
 set(gca,'YTickLabel',yDataNum)
-% set(gca,'XTickLabel',xDataStr)
 
+% format the title if plot raw data for different days
 formatOut = 'yyyy-mm-dd';
-
 if strcmp(titleString,'date')
     startTimestr = datestr(startTimeString,formatOut);
 else
@@ -70,17 +69,5 @@ xlabel('time')
 ylabel('cell ID')
 ylabel(c,'km/h')
 set(handle(c), 'ylim', [0 110])
-
-%   hold on
-% numberOfTimeSteps/timeStep + 1;
-
-% var 5:e minut
-% steplength = 5;
-% start_time = 1;
-% NumOfIntervals = numberOfTimeSteps/steplength
-% 
-% [hej,travelTimesArray] = travelTimesInterval(temp.*3.6, start_time, NumOfIntervals, steplength, cellSizeAll,numberOfTimeSteps);
-% plot(hej')
-
 
 end

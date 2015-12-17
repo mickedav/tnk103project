@@ -2,31 +2,30 @@ function [sensorSpeedArray,sensorFlowArray,numberOfTimeSteps,numberOfSensors,sen
 import java.lang.*
 import core.*
 
-% calculate the startminute in minutes after midnight
+% calculate the startminute and endminute in minutes after midnight
 startTimeString=matlab.unittest.diagnostics.ConstraintDiagnostic.getDisplayableString(startTime);
 [Y, M, D, H, MN, S] = datevec(startTimeString);
 startMinute = H*60+MN+1;
-
 endTimeString=matlab.unittest.diagnostics.ConstraintDiagnostic.getDisplayableString(endTime);
 [Y, M, D, H, MN, S] = datevec(endTimeString);
 endMinute = H*60+MN+1;
 
+% calculate the number of time steps for the investigated entire time period
 numberOfTimeSteps = endMinute - startMinute;
+% calculate the number of sensors in the network
 numberOfSensors = size(sensorIdArray,2);
 
 sensorSpeedArray = NaN(numberOfTimeSteps,numberOfSensors);
 sensorFlowArray = NaN(numberOfTimeSteps,numberOfSensors);
 
+% fill sensorSpeedArray with extracted point speed for each sensor for each
+% time period 
 for i = 1:numberOfSensors
     sensorId = Integer(sensorIdArray(i));
     sensorData = output.SensorOutput.getSensorOutput(network,sensorId,startTime,endTime);
     sensorDataSpeed = sensorData.speed;
-    sensorDataVar = sensorData.speedStdDev;
-% hämta varians och räkna ut space mean time.
-% spacemean=timemean-var^2/timemean
-    sensorDataFlow = sensorData.flow;
     
-    numberOfRealTimeSteps = size(sensorDataFlow,1);
+    numberOfRealTimeSteps = size(sensorDataSpeed,1);
     
     for t = 1:numberOfRealTimeSteps
         sensorTimeStamp=sensorData.timestamps;
@@ -35,26 +34,7 @@ for i = 1:numberOfSensors
         minute = H*60+MN - startMinute+1;
         
         sensorSpeedArray(minute,i) = sensorDataSpeed(t);
-        sensorFlowArray(minute,i) = sensorDataFlow(t);
-        
-        
-        
     end
- 
-    % DO NOT NEED ANYMORE, HOPEFULLY
-    %     % If the sendorData from a specific sensor is larger or smaller than the
-    %     % number of sensorData from the previous sensors.
-    %     if i~= 1 && size(sensorDataSpeed,1) < size(sensorSpeedArray,1)
-    %         sensorSpeedArray = sensorSpeedArray(1:size(sensorDataSpeed,1),:);
-    %         sensorFlowArray = sensorFlowArray(1:size(sensorDataSpeed,1),:);
-    %
-    %     elseif i~= 1 && size(sensorDataSpeed,1) > size(sensorSpeedArray,1)
-    %         sensorDataSpeed = sensorDataSpeed(1:size(sensorSpeedArray,1));
-    %         sensorDataFlow  = sensorDataFlow (1:size(sensorFlowArray,1));
-    %     end
-    
-    %     sensorSpeedArray(:,i) = sensorDataSpeed;
-    %     sensorFlowArray(:,i) = sensorDataFlow;
 end
 
 end

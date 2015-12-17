@@ -1,12 +1,19 @@
-function [sensorAllCellsSpeedArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps,totalNumberOfCells,indexArray,linkIdArray,numberOfCells,cellSize)
-% sensorAllCellsTravelTimesArray
+function [sensorAllCellsSpeedArray] = algorithm1(network,sensorCellSpeedArray,numberOfTimeSteps)
+% get the data from each sensor from the database
 sensor = network.getRadarSensors;
 
 sensorCellSpeedArray(isnan(sensorCellSpeedArray)) = 0;
 sensorAllCellsSpeedArray=sensorCellSpeedArray;
+
+% indexSensorArray consists of each sensor's cell number
 indexSensorArray = find(sensorCellSpeedArray(:,1));
 
-% fill sensorAllCellsSpeedArray
+% fill sensorAllCellsSpeedArray with estimated speed for all cells
+% depending on the two nearest sensors. The speed difference and the 
+% difference in number of cells between the two sensors are used to 
+% calculate a step length for how much them speed will change for each 
+% empty cell between the two sensors’ cells.
+
 for j=1:numberOfTimeSteps
     for k = 2:size(indexSensorArray,1)
         indexDifference = (indexSensorArray(k)-indexSensorArray(k-1));
@@ -17,25 +24,6 @@ for j=1:numberOfTimeSteps
         end
     end
 end
-
-% do not calculate the travel times for cells before the first sensor
-for t=indexSensorArray(1):totalNumberOfCells
-    currentNumberOfCells = 0;
-    index = 0;
-   
-    for i=1:size(numberOfCells,2)
-        currentNumberOfCells =  currentNumberOfCells + numberOfCells(i);
-        index = index + 1;
-%         break if cell t is on link number index
-        if (t/currentNumberOfCells) <=1
-            
-            break;
-            
-        end
-        
-    end
-    
-%     sensorAllCellsTravelTimesArray(t,:) = cellSize(index)./sensorAllCellsSpeedArray(t,:);
-end
+% convert to km/h
 sensorAllCellsSpeedArray = sensorAllCellsSpeedArray.*3.6;
 end
