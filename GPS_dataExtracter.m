@@ -41,44 +41,21 @@ network = Network();
 dbr = DatabaseReader();
 analyst = util.NetworkAnalysis(network);
 
+%decide number of days to plot
 nbrDays = 1;
-start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,6,30,59,59);
-end_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,21,9,30,0,0);
+%decide start and end time
+actStartTime = Time.newTimeFromBerkeleyDateTime(2013,03,date,6,30,0,0);
+startTime = Time.newTimeFromBerkeleyDateTime(2013,03,date,6,30,59,59);
+endTime = Time.newTimeFromBerkeleyDateTime(2013,03,date,9,30,0,0);
+endSec = TimeInterval(actStartTime,endTime);
+endSec = endSec.get_time_interval_duration + 60;
 
-[GpsSpeedData, speedDataAggregated, cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp);
+%fetch GPS data
+[GpsSpeedData, speedDataAggregated, cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, startTime, endTime, endSec);
 
-
-
-%should be set somewhere else, used in many functions
-endSec = 10860;
-
+%aggregate to minutes to enable plotting
 cellSpeedAggregatedTime = aggregateTime(speedDataAggregated, endSec, cellSizeAll);
 
 start_time = 1;
-% travelTime = trajectory(cellSpeedAggregatedTime, cellSizeAll, start_time);
 
-%T = squeeze(GpsSpeedData(1,:,:) - GpsSpeedData(2,:,:));
-%T = abs(T);
-
-%for i = 1:nbrDays
-   % GpsSpeedDataDay = squeeze(GpsSpeedData(i,:,:));
-    %figure(i)
-    plotHeatMap(cellSpeedAggregatedTime, start_TimeStamp, end_TimeStamp, length(cellSpeedAggregatedTime), 'Raw GPS data');
-
-    %end
-tock = Time();
-tock.secondsSince(tick);
-% 
-% hgload('figurTest.fig');
-% myhandle = findall(gcf,'type','image');
-% data = get(myhandle,'cdata');
-% datac = size(data,1);
-% xm = 50;
-% time = 1;
-% while (xm(end) < datac)
-%     xm(end+1) = xm(end) + round(data(xm(end),time))
-%     time = time + 1;
-% end
-% 
-% hold on
-% plot(181:(size(xm,2)+180),xm,'LineWidth',8)
+plotHeatMap(cellSpeedAggregatedTime, startTime, startTime, length(cellSpeedAggregatedTime), 'Raw GPS data');

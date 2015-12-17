@@ -1,5 +1,5 @@
-function [traject] = trajectory(cellSpeed, cellSizeAll, start_time, startCell, endCell, startOffset, endOffset)
-
+function [trajectory] = trajectory(cellSpeed, cellSizeAll, start_time, startCell, endCell, startOffset, endOffset)
+%if looking at shorter sections start and end cells are given
 if(startCell == NaN)
     startCell = 9;
 end
@@ -14,29 +14,23 @@ if(startCell > endCell)
     startCell = 50;
 end
 
+%initial values
 currCell = startCell;
-
-
-%don't know if this is correct, maybe not if the start time is more than 1
-%hour after the first time in the plot
-%minute = start_time.getMinute;
-
 minute = start_time;
 second = 1;
-%second = start_time.getSecond;
 totSecond = 1;
-traject = 0;
+trajectory = 0;
+%start at the given start offset
 deltaDist = startOffset;
+cellSpeed(isnan(cellSpeed)) = 0;
 
-cellSpeed(isnan(cellSpeed)) = 0; 
-
-
+%traverse through network until last cell is reached
 while (currCell < endCell) && (minute < size(cellSpeed,2))
     
     currSpeed = cellSpeed(currCell,minute);
-  
+    
     %travelled dist during 1 second
-    %rewrite km/h to m/s (IS THIS NEEDED???) (*1 since one second)
+    %rewrite km/h to m/s
     deltaDist = deltaDist + (currSpeed)/3.6;
     
     if deltaDist > cellSizeAll(currCell)
@@ -50,12 +44,14 @@ while (currCell < endCell) && (minute < size(cellSpeed,2))
         minute = minute + 1;
         second = 1;
     end
-    traject(totSecond) = currCell;
+    %save position (cell) for every second
+    trajectory(totSecond) = currCell;
     %check next second
     second = second + 1;
     totSecond = totSecond + 1;
 end
-    temp = floor(endOffset/(currSpeed/3.6));
-    traject(end:(end + temp)) = endCell;
+%the remaining last cell is not needed to be traversed, just the offset
+temp = floor(endOffset/(currSpeed/3.6));
+trajectory(end:(end + temp)) = endCell;
 end
 

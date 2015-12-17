@@ -1,4 +1,4 @@
-function [speedData, speedDataAggregated,  cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp)
+function [speedData, speedDataAggregated,  cellSizeAll] = GPSdataExtractor(nbrDays, network, analyst, dbr, linkIdArray, start_TimeStamp, end_TimeStamp, endSec)
 
 %% Function returns speedData, a 3D-matric with (day, cell, minute)
 
@@ -20,7 +20,7 @@ endMinute = end_TimeStamp.getMinute;
 
 %Create Time intervall
 for day = 1:nbrDays
-   % tick = Time();
+    % tick = Time();
     startTimeStampString = char(start_TimeStamp.toString);
     startTimeStampString = ['''' startTimeStampString ''''];
     endTimeStampString = char(end_TimeStamp.toString);
@@ -36,7 +36,7 @@ for day = 1:nbrDays
         'OR startlid = 9160 OR startlid = 71687 OR startlid = 9198) '...
         'AND(endlid = 11269 OR endlid = 14136 OR endlid = 6189 OR endlid = 8568 '...
         'OR endlid = 15256 OR endlid = 9150 OR endlid = 38698 '...
-        'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) '...
+        'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) AND isvalid '...
         ['AND (start_time BETWEEN ' startTimeStampString ' AND ' endTimeStampString ') ']...
         'ORDER BY start_time']
     
@@ -48,7 +48,7 @@ for day = 1:nbrDays
         'OR startlid = 9160 OR startlid = 71687 OR startlid = 9198) '...
         'AND(endlid = 11269 OR endlid = 14136 OR endlid = 6189 OR endlid = 8568 '...
         'OR endlid = 15256 OR endlid = 9150 OR endlid = 38698 '...
-        'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) '...
+        'OR endlid = 9160 OR endlid = 71687 OR endlid = 9198) AND isvalid '...
         ['AND (start_time BETWEEN ' startTimeStampString ' AND ' endTimeStampString ') ']];
     %%
     
@@ -71,8 +71,6 @@ for day = 1:nbrDays
         'Cant retrieve number of rows'
     end
     
-    %tock = Time();
-    %fprintf('Query made, took %d seconds',tock.secondsSince(tick));
     %% Get column names in order to fetch data
     wantedDataInt = [String('startlid'), String('endlid'), String('traveltime')];
     wantedDataDouble = [String('start_offset'), String('end_offset')];
@@ -90,7 +88,6 @@ for day = 1:nbrDays
     row = 1;
     
     %% Loop through the DB answer and store data in MATLAB arrays
-    tick = Time();
     while dbr.psRSNext('test');
         
         for i = 1:size(wantedDataInt)
@@ -105,24 +102,17 @@ for day = 1:nbrDays
                 doubleData(row,i) = k;
             end
         end
-        
+        %create time stamps
         for i = 1:size(wantedDataTimeStamp)
             time_stamp_temp = TimeInterval(start_TimeStamp, dbr.psRSGetTimestamp('test', wantedDataTimeStamp(i)));
             timeStampData(row,i) = round(time_stamp_temp.get_time_interval_duration);
         end
         row = row + 1;
         
-   %     tock = Time();
-   %     fprintf('Fetched taxi row %i, took %d seconds',row-1,tock.secondsSince(tick));
     end
-    tock = Time();
-    fprintf('Fetched taxi row, took %d seconds',tock.secondsSince(tick));
     row = row - 1;
     
-    tick = Time();
-    [speedDataAggregatedTime, speedData(day,:,:), endSec, totalNumberOfCells, cellSizeAll] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row);
-    tock = Time();
-    fprintf('setCellSpeedDay, took %d seconds',row-1,tock.secondsSince(tick));
+    [speedDataAggregatedTime, speedData(day,:,:), totalNumberOfCells, cellSizeAll] = setCellSpeedDay(intData, doubleData, timeStampData, linkIdArray, network, analyst ,row, endSec);
     dbr.psDestroy('test');
     dbr.psDestroy('test2');
     start_TimeStamp = Time.newTimeFromBerkeleyDateTime(2013,03,startDay +(day)*7,startHour, startMinute,59,59);
